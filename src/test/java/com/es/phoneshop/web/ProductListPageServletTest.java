@@ -12,12 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProductListPageServletTest {
+    private final String path = "/WEB-INF/pages/productList.jsp";
     @Mock
     private HttpServletRequest request;
     @Mock
@@ -29,7 +28,7 @@ public class ProductListPageServletTest {
 
     @Before
     public void setup(){
-        when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
+        when(request.getRequestDispatcher(path)).thenReturn(requestDispatcher);
     }
 
     @Test
