@@ -1,7 +1,9 @@
 package com.es.phoneshop.model.product;
 
-public class ProductException extends RuntimeException {
-    ProductException(String message) {
-        super(message);
+public class ProductNotFoundException {
+    private long productId;
+
+    public ProductNotFoundException(Long productId) {
+        this.productId = productId;
     }
 }
