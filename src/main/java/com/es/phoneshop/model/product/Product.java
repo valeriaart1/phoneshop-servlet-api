@@ -1,6 +1,7 @@
 package com.es.phoneshop.model.product;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Objects;
 
@@ -14,11 +15,13 @@ public class Product {
     private Currency currency;
     private int stock;
     private String imageUrl;
+    private ArrayList<HistoryOfPrices> history;
 
     public Product() {
     }
 
-    public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
+    public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock,
+                   String imageUrl, ArrayList<HistoryOfPrices> history) {
         this.id = id;
         this.code = code;
         this.description = description;
@@ -26,6 +29,7 @@ public class Product {
         this.currency = currency;
         this.stock = stock;
         this.imageUrl = imageUrl;
+        this.history = history;
     }
 
     @Override
@@ -33,7 +37,15 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return id == product.id;
+        return Objects.equals(id, product.id) &&
+                Objects.equals(code, product.code) &&
+                Objects.equals(description, product.description) &&
+                Objects.equals(price, product.price) &&
+                Objects.equals(currency, product.currency) &&
+                Objects.equals(stock, product.stock) &&
+                Objects.equals(imageUrl, product.imageUrl) &&
+                Objects.equals(history, product.history);
+
     }
 
     @Override
@@ -51,6 +63,7 @@ public class Product {
                 ", currency=" + currency +
                 ", stock=" + stock +
                 ", imageUr1=" + imageUrl + '\'' +
+                ", history of prices=" + history + '\'' +
                 '}';
     }
 
@@ -108,5 +121,13 @@ public class Product {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public ArrayList<HistoryOfPrices> getHistory() {
+        return history;
+    }
+
+    public void setHistory(ArrayList<HistoryOfPrices> history) {
+        this.history = history;
     }
 }
