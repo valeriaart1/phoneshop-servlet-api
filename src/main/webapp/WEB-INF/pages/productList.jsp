@@ -43,8 +43,17 @@
         <td>
           <a href="${pageContext.servletContext.contextPath}/product/${product.id}">${product.description}</a>
         </td>
+        <a href="#x" class="overlay" id="win1"></a>
+        <div class="popup" align="center">
+        <!--
+        <c:forEach var="historyOfPrices" items="${product.history}">
+        ${historyOfPrices.date}
+        <fmt:formatNumber value="${historyOfPrices.price}" type="currency" currencySymbol="${historyOfPrices.currency.symbol}"/>
+        </c:forEach>-->
+        <a class="close"title="Закрыть" href="#close"></a>
+        </div>
         <td class="price">
-          <a>
+          <a href="#win1">
             <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
           </a>
         </td>

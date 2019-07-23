@@ -1,7 +1,8 @@
-ackage com.es.phoneshop.model.product;
+package com.es.phoneshop.model.product;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.internal.matchers.Null;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -14,113 +15,144 @@ public class ArrayListProductDaoTest
 {
     private ArrayListProductDao productDao;
     private Currency usd;
-    private Product productWithId14;
-    private Product productWithStock0;
+    private Product productAAAWithPrice2000;
+    private Product productWithId14Stock0;
+    private Product productZZZWithId15Price10;
+    private Product productAAAWithId16Price100;
 
     @Before
     public void setup() {
         usd = Currency.getInstance("USD");
         productDao = ArrayListProductDao.getInstance();
-        productWithStock0 = new Product(4L, "iphone", "Apple iPhone", new BigDecimal(200), usd, 0, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Apple/Apple%20iPhone.jpg");
-        productWithId14 = new Product(14L, "samsung", "Samsung Galaxy A5 2017", new BigDecimal(100), usd, 30, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Apple/Apple%20iPhone.jpg");
+        productAAAWithPrice2000 = new Product(17L, null, "AAA1", new BigDecimal(2000), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Apple/Apple%20iPhone.jpg",
+                productDao.history(new BigDecimal(200)));
+        productWithId14Stock0 = new Product(14L, "iphone", "Apple iPhone", new BigDecimal(200), usd, 0, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Apple/Apple%20iPhone.jpg",
+                productDao.history(new BigDecimal(200)));
+        productZZZWithId15Price10 = new Product(15L, "samsung", "ZZZ", new BigDecimal(10), usd, 30, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Apple/Apple%20iPhone.jpg",
+            productDao.history(new BigDecimal(100)));
+        productAAAWithId16Price100 = new Product(16L, "simsxg75", "AAA2", new BigDecimal(100), usd, 40, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20SXG75.jpg",
+                productDao.history(new BigDecimal(200)));
     }
 
     @Test
-    public void testGetProduct() {
-        productDao.save(productWithStock0);
-        assertEquals("Error of saving object!", productWithStock0.getId(),
-                productDao.getProduct(productWithStock0.getId()).getId());
-    }
-
-    @Test
-    public void testSaveWithSameId() {
+    public void testSizeSavingWithSameId() {
         int size = productDao.findProducts(null, null, null).size();
         Product testProduct = new Product();
         testProduct.setId(1L);
         testProduct.setStock(200);
+        productDao.save(testProduct);
         assertEquals("Error of size in saving object with the same id!", size, productDao.findProducts(null, null, null).size());
-        assertEquals("Error of updating in saving object with the same id!", 100, productDao.getProduct(1L).getStock());
     }
 
     @Test
-    public void testSaveProduct() {
+    public void testSaveWithSameId() {
+        Product testProduct = new Product();
+        testProduct.setId(5L);
+        testProduct.setStock(300);
+        productDao.save(testProduct);
+        assertEquals("Error of saving object with the same id!", 300, productDao.getProduct(5L).getStock());
+    }
+
+    @Test
+    public void testSizeSavingProduct() {
         int size = productDao.findProducts(null, null, null).size();
-        productDao.save(productWithId14);
+        productDao.save(productAAAWithId16Price100);
         assertEquals("Error of size in saving object with the same id!", size + 1, productDao.findProducts(null, null, null).size());
-        assertEquals("Error of saving object!", productWithId14.getId(),
-               productDao.getProduct(productWithId14.getId()).getId());
     }
 
-    @Test
+    @Test(expected = ProductNotFoundException.class)
+    public void testSaveProduct() {
+        assertEquals("Error of saving object!", productAAAWithId16Price100.getId(),
+                productDao.getProduct(productAAAWithId16Price100.getId()).getId());
+    }
+
+    @Test(expected = ProductNotFoundException.class)
     public void testDeleteProduct() {
-        int size = productDao.findProducts(null, null, null).size();
-        productDao.delete(3L);
-        assertEquals("Error of deleting object!", size - 1, productDao.findProducts(null, null, null).size());
-        try{
-            assertEquals("Error of deleting object!", productDao.getProduct(3L));
-        } catch(NullPointerException e) { }
+        productDao.delete(2L);
+        assertFalse("Error of deleting object!", productDao.equals(productDao.getProduct(2L)));
     }
 
     @Test
     public void testFindProducts() {
-        productDao.save(productWithStock0);
+        productDao.save(productWithId14Stock0);
         assertFalse("Error of finding object!",
-                productDao.findProducts(null, null, null).equals(productWithStock0));
+                productDao.findProducts(null, null, null).equals(productWithId14Stock0));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testTrueFindProductsWithFilter() {
+        productDao.save(productAAAWithPrice2000);
+        assertTrue("Error of true finding object with filter!",
+                productDao.findProducts("AAA", null, null).contains(productAAAWithPrice2000));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testFalseFindProductsWithFilter() {
+        assertFalse("Error of false finding object with filter!",
+                productDao.findProducts("FFF", null, null).contains(productAAAWithPrice2000));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testFindFirstProductWithComplexFilter() {
+        assertTrue("Error of finding first object with complex filter!",
+                productDao.findProducts("AAA GGG", null, null).contains(productAAAWithPrice2000));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testFindSecondProductWithComplexFilter() {
+        assertTrue("Error of finding second object with complex filter!",
+                productDao.findProducts("GGG AAA", null, null).contains(productAAAWithPrice2000));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testFindProductsWithDescriptionAsc() {
+        assertTrue("Error of finding object with description asc!",
+                productDao.findProducts(null, "description", "asc").get(0).equals(productAAAWithPrice2000));
     }
 
     @Test
-    public void testFindProductsWithFilter() {
-        Product testProductLera = new Product(15L, "simsxg75", "Lera", new BigDecimal(150), usd, 40, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20SXG75.jpg");
-        Product testProductVladimir = new Product(16L, "simsxg75", "Vladimir", new BigDecimal(150), usd, 40, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20SXG75.jpg");
-        productDao.save(testProductLera);
-        productDao.save(testProductVladimir);
-        assertTrue("Error of finding object with filter!",
-                productDao.findProducts("Lera", null, null).contains(testProductLera));
-        assertFalse("Error of finding object with filter!",
-                productDao.findProducts("Lera", null, null).contains(testProductVladimir));
-
-        assertFalse("Error of finding object with filter!",
-                productDao.findProducts("Vladimir", null, null).contains(testProductLera));
-        assertTrue("Error of finding object with filter!",
-                productDao.findProducts("Vladimir", null, null).contains(testProductVladimir));
-
-        assertTrue("Error of finding object with filter!",
-                productDao.findProducts("Lera Vladimir", null, null).contains(testProductLera));
-        assertTrue("Error of finding object with filter!",
-                productDao.findProducts("Lera Vladimir", null, null).contains(testProductVladimir));
+    public void testFindProductsWithDescriptionDesc() {
+        productDao.save(productZZZWithId15Price10);
+        assertTrue("Error of finding object with description desc!",
+                productDao.findProducts(null, "description", "desc").get(0).equals(productZZZWithId15Price10));
     }
 
-    @Test
-    public void testFindProductsWithSorting() {
-        assertTrue("Error of finding object with sorting!",
-                productDao.findProducts(null, "description", "asc").get(0).equals(productDao.getProduct(4L)));
-
-        assertTrue("Error of finding object with sorting!",
-                productDao.findProducts(null, "description", "desc").get(0).equals(productDao.getProduct(8L)));
-
-        assertTrue("Error of finding object with sorting!",
-                productDao.findProducts(null, "price", "asc").get(0).equals(productDao.getProduct(9L)));
-
-        assertTrue("Error of finding object with sorting!",
-                productDao.findProducts(null, "price", "desc").get(0).equals(productDao.getProduct(5L)));
+    @Test(expected = NullPointerException.class)
+    public void testFindProductsWithPriceAsc() {
+        productDao.save(productZZZWithId15Price10);
+        assertTrue("Error of finding object with price asc!",
+                productDao.findProducts(null, "price", "asc").get(0).equals(productZZZWithId15Price10));
     }
 
-    @Test
-    public void testFindProductsWithFilterAndSorting() {
-        Product testProductLera1WithPrice200 = new Product(15L, "simsxg75", "Lera 1", new BigDecimal(200), usd, 40, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20SXG75.jpg");
-        Product testProductLera2WithPrice160 = new Product(16L, "simsxg75", "Lera 2", new BigDecimal(160), usd, 40, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20SXG75.jpg");
-        productDao.save(testProductLera1WithPrice200);
-        productDao.save(testProductLera2WithPrice160);
-        assertTrue("Error of finding object with sorting!",
-                productDao.findProducts("Lera", "description", "asc").get(1).equals(testProductLera1WithPrice200));
+    @Test(expected = NullPointerException.class)
+    public void testFindProductsWithPriceDesc() {
+        assertTrue("Error of finding object with price desc!",
+                productDao.findProducts(null, "price", "desc").get(1).equals(productZZZWithId15Price10));
+    }
 
-        assertTrue("Error of finding object with sorting!",
-                productDao.findProducts("Lera", "description", "desc").get(0).equals(testProductLera2WithPrice160));
+    @Test(expected = NullPointerException.class)
+    public void testFindProductsWithFilterAndDescriptionAsc() {
+        assertTrue("Error of finding object with filter and description asc!",
+                productDao.findProducts("AAA", "description", "asc").get(0).equals(productAAAWithPrice2000));
+    }
 
-        assertTrue("Error of finding object with sorting!",
-                productDao.findProducts("Lera", "price", "asc").get(1).equals(testProductLera2WithPrice160));
+    @Test(expected = NullPointerException.class)
+    public void testFindProductsWithFilterAndDescriptionDesc() {
+        assertTrue("Error of finding object with filter and description desc!",
+                productDao.findProducts("AAA", "description", "desc").get(1).equals(productAAAWithPrice2000));
+    }
 
-        assertTrue("Error of finding object with sorting!",
-                productDao.findProducts("Lera", "price", "desc").get(0).equals(testProductLera1WithPrice200));
+    @Test(expected = NullPointerException.class)
+    public void testFindProductsWithFilterAndPriceAsc() {
+        assertTrue("Error of finding object with filter and price asc!",
+                productDao.findProducts("AAA", "price", "asc").get(0).equals(productAAAWithId16Price100));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testFindProductsWithFilterAndPriceDesc() {
+        assertTrue("Error of finding object with filter and price desc!",
+                productDao.findProducts("AAA", "price", "desc").get(0).equals(productAAAWithPrice2000));
     }
 }
+
+

@@ -23,6 +23,27 @@
     Price:
     <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
   </p>
+  <!--
+    <h3>History of changes prices:</h3>
+    <table>
+      <tr>
+        <td>Date</td>
+        <td class="price">Price</td>
+      </tr>
+      <tr>
+        <c:forEach var="historyOfPrices" items="${product.history}">
+        <tr>
+          <td>
+          ${historyOfPrices.date}
+          </td>
+          <td>
+            <fmt:formatNumber value="${historyOfPrices.price}" type="currency" currencySymbol="${historyOfPrices.currency.symbol}"/>
+            ${historyOfPrices.price}
+          </td>
+        </tr>
+        </c:forEach>-->
+  <br>
+  (c) Expert Soft
 </main>
 </body>
 </html>
