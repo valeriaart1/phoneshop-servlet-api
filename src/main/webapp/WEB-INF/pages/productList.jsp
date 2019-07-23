@@ -1,19 +1,38 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <jsp:useBean id="products" type="java.util.ArrayList" scope="request"/>
-<tags:master pageTitle="Product List">
-  <p>
-    Welcome to Expert-Soft training!
-  </p>
+<html>
+<head>
+  <title>Product List</title>
+  <link href='http://fonts.googleapis.com/css?family=Lobster+Two' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/styles/main.css">
+</head>
+<body class="product-list">
+<header>
+  <a href="${pageContext.servletContext.contextPath}">
+    <img src="${pageContext.servletContext.contextPath}/images/logo.svg"/>
+    PhoneShop
+  </a>
+</header>
+<main>
+<br>
+  <form>
+    <input name="query" value="${param.query}">
+    <button>Search</button>
+  </form>
   <table>
     <thead>
       <tr>
         <td>Image</td>
-        <td>Description</td>
-        <td class="price">Price</td>
+        <td>Description
+          <a href="${pageContext.servletContext.contextPath}/products?sort=description&order=asc&query=${param.query}">asc</a><text> </text>
+          <a href="${pageContext.servletContext.contextPath}/products?sort=description&order=desc&query=${param.query}">desc</a>
+        </td>
+        <td class="price">Price
+          <a href="${pageContext.servletContext.contextPath}/products?sort=price&order=asc&query=${param.query}">asc</a><text> </text>
+          <a href="${pageContext.servletContext.contextPath}/products?query=&{param.query}&sort=price&order=desc">desc</a></td>
       </tr>
     </thead>
     <c:forEach var="product" items="${products}">
@@ -21,11 +40,28 @@
         <td>
           <img class="product-tile" src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}">
         </td>
-        <td>${product.description}</td>
+        <td>
+          <a href="${pageContext.servletContext.contextPath}/product/${product.id}">${product.description}</a>
+        </td>
+        <a href="#x" class="overlay" id="win1"></a>
+        <div class="popup" align="center">
+        <!--
+        <c:forEach var="historyOfPrices" items="${product.history}">
+        ${historyOfPrices.date}
+        <fmt:formatNumber value="${historyOfPrices.price}" type="currency" currencySymbol="${historyOfPrices.currency.symbol}"/>
+        </c:forEach>-->
+        <a class="close"title="Закрыть" href="#close"></a>
+        </div>
         <td class="price">
-          <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
+          <a href="#win1">
+            <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
+          </a>
         </td>
       </tr>
     </c:forEach>
   </table>
-</tags:master>
+<br>
+(c) Expert Soft
+</main>
+</body>
+</html>
