@@ -12,7 +12,7 @@ public class ArrayListProductDao implements ProductDao {
     private ArrayListProductDao() {
     }
 
-    synchronized public static ArrayListProductDao getInstance() {
+    public static ArrayListProductDao getInstance() {
         if (instance == null) {
             instance = new ArrayListProductDao();
         }
