@@ -1,8 +1,6 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.model.product.ArrayListProductDao;
-import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.model.product.ProductDao;
+import com.es.phoneshop.model.product.ProductDaoImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,17 +10,20 @@ import java.io.IOException;
 
 public class ProductListPageServlet extends HttpServlet {
 
-    private ProductDao productDao;
-
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        productDao = new ArrayListProductDao();
-    }
+    private ProductDaoImpl productDao = ProductDaoImpl.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("products", productDao.findProducts());
+        String query = request.getParameter("query");
+        String sort = request.getParameter("sort");
+        String order = request.getParameter("order");
+        if(sort != null && order != null) {
+            String sortOrder = sort + " " + order;
+            request.setAttribute("products", productDao.sortByParameter(productDao.findProducts(query), sortOrder));
+        }
+        else {
+            request.setAttribute("products", productDao.findProducts(query));
+        }
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
 }
