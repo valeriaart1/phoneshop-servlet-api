@@ -1,8 +1,8 @@
 package com.es.phoneshop.model.product;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Currency;
+import java.util.List;
 import java.util.Objects;
 
 public class Product {
@@ -15,13 +15,13 @@ public class Product {
     private Currency currency;
     private int stock;
     private String imageUrl;
-    private ArrayList<HistoryOfPrices> history;
+    private List<PriceHistory> history;
 
     public Product() {
     }
 
     public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock,
-                   String imageUrl, ArrayList<HistoryOfPrices> history) {
+                   String imageUrl, List<PriceHistory> history) {
         this.id = id;
         this.code = code;
         this.description = description;
@@ -37,20 +37,13 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return Objects.equals(id, product.id) &&
-                Objects.equals(code, product.code) &&
-                Objects.equals(description, product.description) &&
-                Objects.equals(price, product.price) &&
-                Objects.equals(currency, product.currency) &&
-                Objects.equals(stock, product.stock) &&
-                Objects.equals(imageUrl, product.imageUrl) &&
-                Objects.equals(history, product.history);
+        return Objects.equals(code, product.code);
 
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(code);
     }
 
     @Override
@@ -123,11 +116,11 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public ArrayList<HistoryOfPrices> getHistory() {
+    public List<PriceHistory> getHistory() {
         return history;
     }
 
-    public void setHistory(ArrayList<HistoryOfPrices> history) {
+    public void setHistory(List<PriceHistory> history) {
         this.history = history;
     }
 }

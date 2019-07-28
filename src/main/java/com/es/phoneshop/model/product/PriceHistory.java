@@ -2,26 +2,27 @@ package com.es.phoneshop.model.product;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Currency;
 
-public class HistoryOfPrices implements Serializable {
-    public String date;
+public class PriceHistory implements Serializable {
+    public LocalDate date;
     private BigDecimal price;
     private Currency currency;
 
-    public HistoryOfPrices() {
+    public PriceHistory() {
     }
 
-    public HistoryOfPrices(String string, BigDecimal bigDecimal, Currency usd) {
+    public PriceHistory(LocalDate date, BigDecimal price, Currency currency) {
         this.date = date;
         this.price = price;
         this.currency = currency;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
