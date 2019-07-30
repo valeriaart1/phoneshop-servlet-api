@@ -4,7 +4,7 @@ import com.es.phoneshop.model.product.ProductDaoImpl;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDao;
 
-import com.es.phoneshop.model.viewed.ViewedServiceImpl;
+import com.es.phoneshop.model.viewed.ViewedProductsServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +30,7 @@ public class ProductPageServletTest {
     @Mock
     Product product;
     @Mock
-    ViewedServiceImpl viewedService;
+    ViewedProductsServiceImpl viewedService;
     @Mock
     private ProductDao testProduct;
     private ProductPageServlet servlet = new ProductPageServlet();

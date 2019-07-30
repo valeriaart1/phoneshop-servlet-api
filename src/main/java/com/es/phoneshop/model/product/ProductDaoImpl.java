@@ -50,11 +50,19 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<Product> sortByParameter(List<Product> products, String sortOrder){
-        return products
-                .stream()
-                .sorted(SortBy.getSortOrder(sortOrder))
-                .collect(Collectors.toList());
+    public List<Product> sortByParameter(List<Product> products, String sort, String order){
+        List<Product> resultListProducts;
+        if(sort != null && order != null) {
+            String sortOrder = sort + " " + order;
+            resultListProducts = products
+                    .stream()
+                    .sorted(SortBy.getSortOrder(sortOrder))
+                    .collect(Collectors.toList());
+        }
+        else {
+            resultListProducts = products;
+        }
+        return resultListProducts;
     }
 
     @Override

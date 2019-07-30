@@ -32,14 +32,14 @@
         </td>
         <a href="#x" class="overlay" id="win1"></a>
         <div class="popup" align="center">
-            <h4>History of changes prices ${product.description}:</h4>
-                <c:forEach var="historyOfPrices" items="${product.history}">
-                  <p>${historyOfPrices.date} the price was ${historyOfPrices.price} &#36</p>
-                </c:forEach>
-        <a class="close"title="Закрыть" href="#close"></a>
+           <h4>History of changes prices ${product.description}:</h4>
+           <c:forEach var="historyOfPrices" items="${product.history}">
+             <p>${historyOfPrices.date} the price was ${historyOfPrices.price} &#36</p>
+           </c:forEach>
+           <a class="close"title="Закрыть" href="#close"></a>
         </div>
         <td class="price">
-          <a href="#win1">
+          <a href="#win1" >
             <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="&#36"/>
           </a>
         </td>

@@ -6,20 +6,20 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewedServiceImpl implements ViewedService{
+public class ViewedProductsServiceImpl implements ViewedProductsService {
     private static final String VIEWED_SESSION_ATTRIBUTE = "viewedProducts";
 
-    private static ViewedServiceImpl instance;
+    private static ViewedProductsServiceImpl instance;
 
     private List<Product> listViewedProducts;
 
-    private ViewedServiceImpl() {
+    private ViewedProductsServiceImpl() {
         listViewedProducts = new ArrayList<>();
     }
 
-    public static ViewedServiceImpl getInstance() {
+    public static ViewedProductsServiceImpl getInstance() {
         if(instance == null) {
-            instance = new ViewedServiceImpl();
+            instance = new ViewedProductsServiceImpl();
         }
         return instance;
     }
@@ -36,10 +36,10 @@ public class ViewedServiceImpl implements ViewedService{
 
     @Override
     public void addViewedProducts(List<Product> listProducts, Product product) {
-        boolean flag = listProducts
+        boolean listHasProductId = listProducts
                 .stream()
                 .anyMatch(p -> p.getId().equals(product.getId()));
-        if(flag) {
+        if(listHasProductId) {
             listProducts.remove(product);
         }
         else {

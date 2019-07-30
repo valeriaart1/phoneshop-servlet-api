@@ -11,5 +11,5 @@ public interface ProductDao {
 
     void delete(Long id);
 
-    List<Product> sortByParameter(List<Product> products, String sortOrder);
+    List<Product> sortByParameter(List<Product> products, String sort, String order);
 }

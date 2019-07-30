@@ -8,7 +8,7 @@ import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDaoImpl;
 import com.es.phoneshop.model.product.ProductDao;
 import com.es.phoneshop.model.product.ProductNotFoundException;
-import com.es.phoneshop.model.viewed.ViewedServiceImpl;
+import com.es.phoneshop.model.viewed.ViewedProductsServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,14 +24,14 @@ import java.util.NoSuchElementException;
 public class ProductPageServlet extends HttpServlet {
     private ProductDao productDao;
     private CartService cartService;
-    private ViewedServiceImpl viewedProducts;
+    private ViewedProductsServiceImpl viewedProducts;
 
     @Override
     public void init() throws ServletException {
         super.init();
         productDao = ProductDaoImpl.getInstance();
         cartService = CartServiceImpl.getInstance();
-        viewedProducts = ViewedServiceImpl.getInstance();
+        viewedProducts = ViewedProductsServiceImpl.getInstance();
     }
 
     @Override
