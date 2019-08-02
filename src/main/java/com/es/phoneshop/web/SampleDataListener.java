@@ -1,17 +1,12 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.model.product.ProductDao;
-import com.es.phoneshop.model.product.ProductDaoImpl;
-import com.es.phoneshop.model.product.PriceHistory;
-import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.model.product.*;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Currency;
-import java.util.List;
+import java.util.*;
 
 public class SampleDataListener implements ServletContextListener{
 
@@ -22,7 +17,13 @@ public class SampleDataListener implements ServletContextListener{
         String insertSampleData = servletContextEvent.getServletContext().getInitParameter("insertSampleData");
         if("true".equals(insertSampleData)) {
             ProductDao productDao = ProductDaoImpl.getInstance();
-            getSampleProducts().forEach(productDao::save);
+            getSampleProducts().forEach(product -> {
+                try {
+                    productDao.save(product);
+                } catch (ProductNotFoundException e) {
+                    e.printStackTrace();
+                }
+            });
         }
     }
 
@@ -62,8 +63,8 @@ public class SampleDataListener implements ServletContextListener{
         return result;
     }
 
-    private ArrayList<PriceHistory> history(BigDecimal price) {
-        ArrayList<PriceHistory> historyArray = new ArrayList<>();
+    private Map<BigDecimal, PriceHistory> history(BigDecimal price) {
+        Map<BigDecimal, PriceHistory> historyMap = new HashMap<>();
 
         BigDecimal value06 = new BigDecimal("0.6");
         BigDecimal value08 = new BigDecimal("0.8");
@@ -78,11 +79,16 @@ public class SampleDataListener implements ServletContextListener{
         LocalDate date3 = LocalDate.of(2019, 3, 22);
         LocalDate date4 = LocalDate.of(2019, 6,30);
 
-        historyArray.add(new PriceHistory(date1, price1, USD));
-        historyArray.add(new PriceHistory(date2, price2, USD));
-        historyArray.add(new PriceHistory(date3, price3, USD));
-        historyArray.add(new PriceHistory(date4, price, USD));
+        historyMap.put(price1, new PriceHistory(date1, price1, USD));
+        historyMap.put(price2, new PriceHistory(date2, price2, USD));
+        historyMap.put(price3, new PriceHistory(date3, price3, USD));
+        historyMap.put(price, new PriceHistory(date4, price, USD));
 
-        return historyArray;
+        historyMap
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByKey());
+
+        return historyMap;
     }
 }

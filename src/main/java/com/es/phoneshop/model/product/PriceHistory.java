@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Currency;
+import java.util.Objects;
 
 public class PriceHistory implements Serializable {
     public LocalDate date;
@@ -17,6 +18,19 @@ public class PriceHistory implements Serializable {
         this.date = date;
         this.price = price;
         this.currency = currency;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PriceHistory that = (PriceHistory) o;
+        return Objects.equals(price, that.price);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(price);
     }
 
     public LocalDate getDate() {

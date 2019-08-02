@@ -2,7 +2,7 @@ package com.es.phoneshop.model.product;
 
 import java.math.BigDecimal;
 import java.util.Currency;
-import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class Product {
@@ -15,13 +15,13 @@ public class Product {
     private Currency currency;
     private int stock;
     private String imageUrl;
-    private List<PriceHistory> history;
+    private Map<BigDecimal, PriceHistory> history;
 
     public Product() {
     }
 
     public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl,
-                   List<PriceHistory> history) {
+                   Map<BigDecimal, PriceHistory> history) {
         this.id = id;
         this.code = code;
         this.description = description;
@@ -108,10 +108,10 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public List<PriceHistory> getHistory() {
+    public Map<BigDecimal, PriceHistory> getHistory() {
         return history;
     }
-    public void setHistory(List<PriceHistory> history) {
+    public void setHistory(Map<BigDecimal, PriceHistory> history) {
         this.history = history;
     }
 }

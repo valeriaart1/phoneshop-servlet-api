@@ -18,13 +18,6 @@ public class ProductListPageServlet extends HttpServlet {
         String sort = request.getParameter("sort");
         String order = request.getParameter("order");
         request.setAttribute("products", productDao.sortByParameter(productDao.findProducts(query), sort, order));
-        /*if(sort != null && order != null) {
-            String sortOrder = sort + " " + order;
-            request.setAttribute("products", productDao.sortByParameter(productDao.findProducts(query), sortOrder));
-        }
-        else {
-            request.setAttribute("products", productDao.findProducts(query));
-        }*/
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
 }

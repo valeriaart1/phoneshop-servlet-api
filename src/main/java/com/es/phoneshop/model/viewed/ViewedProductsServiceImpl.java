@@ -3,18 +3,15 @@ package com.es.phoneshop.model.viewed;
 import com.es.phoneshop.model.product.Product;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class ViewedProductsServiceImpl implements ViewedProductsService {
     private static final String VIEWED_SESSION_ATTRIBUTE = "viewedProducts";
 
     private static ViewedProductsServiceImpl instance;
 
-    private List<Product> listViewedProducts;
-
     private ViewedProductsServiceImpl() {
-        listViewedProducts = new ArrayList<>();
     }
 
     public static ViewedProductsServiceImpl getInstance() {
@@ -25,28 +22,28 @@ public class ViewedProductsServiceImpl implements ViewedProductsService {
     }
 
     @Override
-    public List<Product> getViewedProducts(HttpSession session) {
-        List<Product> result = (List<Product>) session.getAttribute(VIEWED_SESSION_ATTRIBUTE);
+    public Deque<Product> getViewedProducts(HttpSession session) {
+        Deque<Product> result = (Deque<Product>) session.getAttribute(VIEWED_SESSION_ATTRIBUTE);
         if(result == null) {
-            result = new ArrayList<>();
+            result = new ArrayDeque<>();
             session.setAttribute(VIEWED_SESSION_ATTRIBUTE, result);
         }
         return result;
     }
 
     @Override
-    public void addViewedProducts(List<Product> listProducts, Product product) {
-        boolean listHasProductId = listProducts
+    public void addViewedProducts(Deque<Product> dequeProducts, Product product) {
+        boolean dequeHasProductId = dequeProducts
                 .stream()
                 .anyMatch(p -> p.getId().equals(product.getId()));
-        if(listHasProductId) {
-            listProducts.remove(product);
+        if(dequeHasProductId) {
+            dequeProducts.remove(product);
         }
         else {
-            if(listProducts.size() == 3){
-                listProducts.remove(0);
+            if(dequeProducts.size() == 3){
+                dequeProducts.removeLast();
             }
         }
-        listProducts.add(product);
+        dequeProducts.addFirst(product);
     }
 }

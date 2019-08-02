@@ -1,13 +1,14 @@
 package com.es.phoneshop.model.product;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductDao {
-    Product getProduct(Long id);
+    Optional<Product> getProduct(Long id);
 
     List<Product> findProducts(String query);
 
-    void save(Product product);
+    void save(Product product) throws ProductNotFoundException;
 
     void delete(Long id);
 

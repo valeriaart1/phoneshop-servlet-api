@@ -1,38 +1,46 @@
 package com.es.phoneshop.model.product;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
-public class ProductDaoImpl implements ProductDao {
+public class ProductDaoImpl implements ProductDao{
     private static ProductDaoImpl instance;
-    private List<Product> products = new ArrayList<>();
+    private List<Product> products = new CopyOnWriteArrayList<>();
 
-    private ProductDaoImpl() {
+    protected ProductDaoImpl() {
     }
 
-    synchronized public static ProductDaoImpl getInstance() {
-        if (instance == null) {
-            instance = new ProductDaoImpl();
+    public static ProductDaoImpl getInstance() {
+        if(instance == null) {
+            synchronized (ProductDaoImpl.class) {
+                if(instance == null) {
+                    instance = new ProductDaoImpl();
+                }
+            }
         }
         return instance;
     }
 
     @Override
-    public Product getProduct(Long id) {
-        return products
+    public Optional<Product> getProduct(Long id) {
+        Optional<Product> optionalProducts = products
                 .stream()
                 .filter(products -> products.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new ProductNotFoundException(id));
+                .findFirst();
+        if(!optionalProducts.isPresent()) {
+            throw new ProductNotFoundException();
+        }
+        return optionalProducts;
     }
-
-    @Override
     public List<Product> findProducts(String query) {
         List<Product> productsWithFilter = new ArrayList<>();
         if(query != null) {
             String[] words = query.split("\\s");
             for(String wordForSearching : words) {
-                productsWithFilter.addAll(this.products
+                productsWithFilter.addAll(products
                         .stream()
                         .filter(products -> products.getDescription().contains(wordForSearching))
                         .collect(Collectors.toList()));
@@ -49,14 +57,14 @@ public class ProductDaoImpl implements ProductDao {
         return filtered;
     }
 
-    @Override
     public List<Product> sortByParameter(List<Product> products, String sort, String order){
+        if(products == null) return null;
         List<Product> resultListProducts;
         if(sort != null && order != null) {
             String sortOrder = sort + " " + order;
             resultListProducts = products
                     .stream()
-                    .sorted(SortBy.getSortOrder(sortOrder))
+                    .sorted(getSortOrder(sortOrder))
                     .collect(Collectors.toList());
         }
         else {
@@ -65,19 +73,32 @@ public class ProductDaoImpl implements ProductDao {
         return resultListProducts;
     }
 
-    @Override
-    public void save(Product product) {
-        boolean flag = products
-                .stream()
-                .anyMatch(p -> p.getId().equals(product.getId()));
-        if(flag) {
-            products.remove(getProduct(product.getId()));
+    private static SortBy getSortOrder(String sortOrder) {
+        if (sortOrder.contains("description")) {
+            return sortOrder.contains("asc") ? SortBy.DESCRIPTION_ASC : SortBy.DESCRIPTION_DESC;
+        } else {
+            return sortOrder.contains("asc") ? SortBy.PRICE_ASC : SortBy.PRICE_DESC;
         }
-        products.add(product);
+    }
+
+
+    @Override
+    public void save(Product product){
+        if(product != null) {
+            boolean flag = products
+                    .stream()
+                    .anyMatch(p -> p.getId().equals(product.getId()));
+            if (flag) {
+                products.remove(getProduct(product.getId()));
+            }
+            products.add(product);
+        }
     }
 
     @Override
     public void delete(Long id) {
-        products.removeIf(p -> p.getId().equals(id));
+        if(id != null) {
+            products.removeIf(p -> p.getId().equals(id));
+        }
     }
 }

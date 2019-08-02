@@ -3,10 +3,10 @@ package com.es.phoneshop.model.viewed;
 import com.es.phoneshop.model.product.Product;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
+import java.util.Deque;
 
 public interface ViewedProductsService {
-    List<Product> getViewedProducts(HttpSession session);
+    Deque<Product> getViewedProducts(HttpSession session);
 
-    void addViewedProducts(List<Product> listProducts, Product product);
+    void addViewedProducts(Deque<Product> dequeProducts, Product product);
 }

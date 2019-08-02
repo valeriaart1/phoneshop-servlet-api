@@ -4,7 +4,7 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <jsp:useBean id="product" type="com.es.phoneshop.model.product.Product" scope="request"/>
-<tags:master pageTitle="Product">
+<tags:master pageTitle="Product Details">
     <a class = "cart">
     ${cart.cartItems}
     </a>
@@ -25,7 +25,7 @@
                   <pre> <a class = "error">${error}</a></pre>
               </c:when>
               <c:otherwise>
-                  <br>
+                <br>
               </c:otherwise>
           </c:choose>
         </form>

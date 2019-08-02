@@ -1,25 +1,31 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.model.product.ProductDaoImpl;
+import com.es.phoneshop.model.cart.Cart;
+import com.es.phoneshop.model.cart.CartServiceImpl;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDao;
-
+import com.es.phoneshop.model.product.ProductNotFoundException;
 import com.es.phoneshop.model.viewed.ViewedProductsServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Deque;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
+@RunWith(MockitoJUnitRunner.class)
 public class ProductPageServletTest {
     @Mock
     private HttpServletRequest request;
@@ -28,37 +34,58 @@ public class ProductPageServletTest {
     @Mock
     private RequestDispatcher requestDispatcher;
     @Mock
-    Product product;
+    private ProductDao productDao;
     @Mock
-    ViewedProductsServiceImpl viewedService;
+    private Product product;
     @Mock
-    private ProductDao testProduct;
-    private ProductPageServlet servlet = new ProductPageServlet();
+    private ViewedProductsServiceImpl viewedProducts;
+    @Mock
+    private Deque<Product> dequeViewedProducts;
+    @Mock
+    private CartServiceImpl cartService;
+    @Mock
+    private Cart cart;
+    @Mock
+    private ProductNotFoundException exception;
+    @InjectMocks
+    private ProductPageServlet servlet;
 
     @Before
     public void setup() {
-        when(product.getId()).thenReturn(1L);
+        when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
+        when(request.getPathInfo()).thenReturn("/1");
+        when(cartService.getCart(request)).thenReturn(cart);
+        when(viewedProducts.getViewedProducts(request.getSession())).thenReturn(dequeViewedProducts);
     }
 
-
-    @Test(expected = NullPointerException.class)
-    public void testDoGetNullPointer() throws ServletException, IOException {
-        when(request.getPathInfo()).thenReturn("null");
-        servlet.doGet(request, response);
-
-        verify(request).getRequestDispatcher("/WEB-INF/pages/product.jsp");
-        verify(requestDispatcher).forward(request, response);
-    }
-
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testDoGet() throws ServletException, IOException {
-        testProduct = ProductDaoImpl.getInstance();
-
-        testProduct.save(product);
-
-        when(request.getPathInfo()).thenReturn("/3");
+        when(productDao.getProduct(1L)).thenReturn(Optional.of(product));
+        cart = cartService.getCart(request);
         servlet.doGet(request, response);
-        verify(request).getRequestDispatcher("/WEB-INF/pages/product.jsp");
+        verify(request).setAttribute("cart", cart);
+        verify(request).setAttribute("product", product);
+        verify(request).setAttribute("viewedProducts", dequeViewedProducts);
+        verify(request, times(1)).getRequestDispatcher("/WEB-INF/pages/product.jsp");
         verify(requestDispatcher).forward(request, response);
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testDoGetProductNotFound() throws ServletException, IOException {
+        servlet.doGet(request, response);
+        verify(request).setAttribute("idProductNotFound", exception.getProductIdNotFound(product.getId()));
+        verify(request).getRequestDispatcher("/WEB-INF/pages/productNotFound.jsp");
+        verify(requestDispatcher).forward(request, response);
+    }
+
+    @Test
+    public void testDoPost() throws ServletException, IOException {
+        servlet.doPost(request, response);
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void loadProduct() throws ServletException, IOException {
+        servlet.doGet(request, response);
+        verify(request).getPathInfo().substring(1);
     }
 }
