@@ -4,10 +4,10 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <jsp:useBean id="product" type="com.es.phoneshop.model.product.Product" scope="request"/>
-<tags:master pageTitle="Product Details">
-    <a class = "cart">
-    ${cart.cartItems}
-    </a>
+<tags:master pageTitle="Product" pageClass="product-detail">
+<a href="${pageContext.servletContext.contextPath}/products"><b>Back to product list<b></a>
+<br>
+<br>
       <h4>Information about ${product.description}</h4>
       <c:choose>
           <c:when test="${not empty error}">

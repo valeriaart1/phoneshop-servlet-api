@@ -39,7 +39,7 @@ public class ProductPageServlet extends HttpServlet {
         try{
             Optional<Product> optionalProduct = productDao.getProduct(productId);
             Deque<Product> dequeViewedProducts = viewedProducts.getViewedProducts(request.getSession());
-            Cart cart = cartService.getCart(request);
+            Cart cart = cartService.getCart(request.getSession());
             request.setAttribute("cart", cart);
             request.setAttribute("viewedProducts", dequeViewedProducts);
             request.setAttribute("product", optionalProduct.get());
@@ -57,10 +57,11 @@ public class ProductPageServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-        Cart cart = cartService.getCart(request);
+        Cart cart = cartService.getCart(request.getSession());
         Long productId = Long.valueOf(loadProduct(request));
+        String quantity = request.getParameter("quantity");
 
-        String QUANTITY_ERROR = cartService.add(request, cart, productId);
+        String QUANTITY_ERROR = cartService.add(request, cart, productId, quantity);
         if(QUANTITY_ERROR == null){
             response.sendRedirect(request.getContextPath() + request.getServletPath() +
                     request.getPathInfo() + MESSAGE_SUCCESS_ADDING);
