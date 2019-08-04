@@ -2,7 +2,6 @@ package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.product.ProductDaoImpl;
 
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +17,6 @@ public class ProductListPageServlet extends HttpServlet {
         String query = request.getParameter("query");
         String sort = request.getParameter("sort");
         String order = request.getParameter("order");
-
         request.setAttribute("products", productDao.sortByParameter(productDao.findProducts(query), sort, order));
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }

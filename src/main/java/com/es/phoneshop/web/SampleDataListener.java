@@ -1,4 +1,5 @@
 package com.es.phoneshop.web;
+
 import com.es.phoneshop.model.product.*;
 
 import javax.servlet.ServletContextEvent;
@@ -6,6 +7,9 @@ import javax.servlet.ServletContextListener;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
+
+import static java.util.Map.Entry.comparingByKey;
+import static java.util.stream.Collectors.toMap;
 
 public class SampleDataListener implements ServletContextListener{
 
@@ -83,11 +87,12 @@ public class SampleDataListener implements ServletContextListener{
         historyMap.put(price3, new PriceHistory(date3, price3, USD));
         historyMap.put(price, new PriceHistory(date4, price, USD));
 
-        historyMap
+        LinkedHashMap<BigDecimal, PriceHistory> collect = historyMap
                 .entrySet()
                 .stream()
-                .sorted(Map.Entry.comparingByKey());
+                .sorted(comparingByKey())
+                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
-        return historyMap;
+        return collect;
     }
 }
