@@ -1,14 +1,18 @@
 package com.es.phoneshop.model.product;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductDao {
 
-    Product getProduct(Long id);
 
-    List<Product> findProducts(String query, String sort, String order);
+    Optional<Product> getProduct(Long id);
 
-    void save(Product product);
+    List<Product> findProducts(String query);
+
+    void save(Product product) throws ProductNotFoundException;
 
     void delete(Long id);
+
+    List<Product> sortByParameter(List<Product> products, String sort, String order);
 }

@@ -3,6 +3,7 @@ package com.es.phoneshop.model.product;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Currency;
+import java.util.Map;
 import java.util.Objects;
 
 public class Product {
@@ -15,13 +16,14 @@ public class Product {
     private Currency currency;
     private int stock;
     private String imageUrl;
-    private ArrayList<HistoryOfPrices> history;
+
+    private Map<BigDecimal, PriceHistory> history;
 
     public Product() {
     }
 
-    public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock,
-                   String imageUrl, ArrayList<HistoryOfPrices> history) {
+    public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl,
+                   Map<BigDecimal, PriceHistory> history) {
         this.id = id;
         this.code = code;
         this.description = description;
@@ -37,20 +39,12 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return Objects.equals(id, product.id) &&
-                Objects.equals(code, product.code) &&
-                Objects.equals(description, product.description) &&
-                Objects.equals(price, product.price) &&
-                Objects.equals(currency, product.currency) &&
-                Objects.equals(stock, product.stock) &&
-                Objects.equals(imageUrl, product.imageUrl) &&
-                Objects.equals(history, product.history);
-
+        return code == product.code;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(code);
     }
 
     @Override
@@ -63,14 +57,13 @@ public class Product {
                 ", currency=" + currency +
                 ", stock=" + stock +
                 ", imageUr1=" + imageUrl + '\'' +
-                ", history of prices=" + history + '\'' +
+                ", history=" + history + '\'' +
                 '}';
     }
 
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -78,7 +71,6 @@ public class Product {
     public String getCode() {
         return code;
     }
-
     public void setCode(String code) {
         this.code = code;
     }
@@ -86,7 +78,6 @@ public class Product {
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -94,7 +85,6 @@ public class Product {
     public BigDecimal getPrice() {
         return price;
     }
-
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
@@ -102,7 +92,6 @@ public class Product {
     public Currency getCurrency() {
         return currency;
     }
-
     public void setCurrency(Currency currency) {
         this.currency = currency;
     }
@@ -110,7 +99,6 @@ public class Product {
     public int getStock() {
         return stock;
     }
-
     public void setStock(int stock) {
         this.stock = stock;
     }
@@ -118,16 +106,13 @@ public class Product {
     public String getImageUrl() {
         return imageUrl;
     }
-
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-
-    public ArrayList<HistoryOfPrices> getHistory() {
+    public Map<BigDecimal, PriceHistory> getHistory() {
         return history;
     }
-
-    public void setHistory(ArrayList<HistoryOfPrices> history) {
+    public void setHistory(Map<BigDecimal, PriceHistory> history) {
         this.history = history;
     }
 }

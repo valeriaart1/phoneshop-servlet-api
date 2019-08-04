@@ -3,7 +3,6 @@ header {
   font: 400 70px/1.3 'Lobster Two', Helvetica, sans-serif;
   color: #2b2b2b;
   text-shadow: 1px 1px 0px #ededed, 4px 4px 0px rgba(0,0,0,0.15);
-
 }
 header a:link {
   text-decoration: none;
@@ -11,7 +10,6 @@ header a:link {
 header img {
   max-width: 64px;
 }
-
 table {
   border-collapse: collapse;
   border : 1px solid gray;
@@ -32,9 +30,7 @@ table.product {
  border: 0;
 }
 
-/* Page specific styles */
 body.product-list {
-
 }
 .overlay {
 top: 0;
@@ -43,18 +39,13 @@ bottom: 0;
 left: 0;
 z-index: 10;
 display: none;
-/* фон затемнения */
 background-color: rgba(0, 0, 0, 0.65);
-position: fixed; /* фиксированное позиционирование */
-cursor: default; /* тип курсора */
+position: fixed;
+cursor: default;
 }
-
-/* активируем слой затемнения */
 .overlay:target {
 display: block;
 }
-
-/* стили модального окна */
 .popup {
 top: -100%;
 right: 0;
@@ -65,18 +56,18 @@ margin: 0;
 width: 85%;
 min-width: 320px;
 max-width: 600px;
-/* фиксированное позиционирование, окно стабильно при прокрутке */
+
 position: fixed;
 padding: 15px;
 border: 1px solid #383838;
 background: #7FFFD4;
-/* скругление углов */
+
 -webkit-border-radius: 4px;
 -moz-border-radius: 4px;
 -ms-border-radius: 4px;
 border-radius: 4px;
 font: 14px/18px 'Tahoma', Arial, sans-serif;
-/* внешняя тень */
+
 -webkit-box-shadow: 0 15px 20px rgba(0,0,0,.22),0 19px 60px rgba(0,0,0,.3);
 -moz-box-shadow: 0 15px 20px rgba(0,0,0,.22),0 19px 60px rgba(0,0,0,.3);
 -ms-box-shadow: 0 15px 20px rgba(0,0,0,.22),0 19px 60px rgba(0,0,0,.3);
@@ -91,7 +82,6 @@ transform: translate(-50%, -500%);
 transition: transform 0.6s ease-out;
 }
 
-/* активируем модальный блок */
 .overlay:target+.popup {
 -webkit-transform: translate(-50%, 0);
 -ms-transform: translate(-50%, 0);
@@ -100,7 +90,6 @@ transform: translate(-50%, 0);
 top: 20%;
 }
 
-/* формируем кнопку закрытия */
 .close {
 top: -10px;
 right: -10px;
@@ -144,5 +133,4 @@ background-color: rgba(252, 20, 0, 0.8);
 -o-transform: rotate(360deg);
 transform: rotate(360deg);
 }
-
 
