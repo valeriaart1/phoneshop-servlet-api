@@ -33,11 +33,11 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Cart getCart(HttpSession session) {
-        Cart result = (Cart) session.getAttribute(CART_SESSION_ATTRIBUTE);
+    public Cart getCart(HttpServletRequest request) {
+        Cart result = (Cart) request.getSession().getAttribute(CART_SESSION_ATTRIBUTE);
         if(result == null) {
             result = new Cart();
-            session.setAttribute(CART_SESSION_ATTRIBUTE, result);
+            request.getSession().setAttribute(CART_SESSION_ATTRIBUTE, result);
         }
         return result;
     }
@@ -105,9 +105,7 @@ public class CartServiceImpl implements CartService {
         return null;
     }
 
-    private void changingCart(String typeOfChanging, int quantityInt, Product product,
-                   Cart cart) {
-
+    private void changingCart(String typeOfChanging, int quantityInt, Product product, Cart cart) {
         Optional<CartItem> optionalCartItem  = optionalCartItem(cart, product);
 
         if (optionalCartItem.isPresent()) {

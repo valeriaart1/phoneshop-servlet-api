@@ -29,7 +29,7 @@ public class CartItemDeleteServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         Product product = productDao.getProduct(loadProduct(request)).get();
         String description = product.getDescription();
-        Cart cart = cartService.getCart(request.getSession());
+        Cart cart = cartService.getCart(request);
         cartService.delete(cart, product);
 
         response.sendRedirect(request.getContextPath()
