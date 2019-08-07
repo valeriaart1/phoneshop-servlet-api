@@ -3,7 +3,6 @@ package com.es.phoneshop.web;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartService;
 import com.es.phoneshop.model.cart.CartServiceImpl;
-import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDao;
 import com.es.phoneshop.model.product.ProductDaoImpl;
 
@@ -26,14 +25,13 @@ public class CartItemDeleteServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        Product product = productDao.getProduct(loadProduct(request)).get();
-        String description = product.getDescription();
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Long productId = Long.valueOf(loadProduct(request));
         Cart cart = cartService.getCart(request);
-        cartService.delete(cart, product);
+        cartService.delete(cart, productId);
 
         response.sendRedirect(request.getContextPath()
-                + "/cart?message=Product " + description + " deleted successfully");
+                + "/cart?message=Product deleted successfully");
     }
 
     private Long loadProduct(HttpServletRequest request) throws NoSuchElementException {

@@ -9,9 +9,7 @@ import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public class CartServiceImpl implements CartService {
     private static final String CART_SESSION_ATTRIBUTE = "cart";
@@ -43,109 +41,85 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CartServiceImpl that = (CartServiceImpl) o;
-        return Objects.equals(productDao, that.productDao);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(productDao);
-    }
-
-    @Override
-    public String toString() {
-        return "CartServiceImpl{" +
-                "productDao=" + productDao +
-                '}';
-    }
-
-    @Override
-    public String add(HttpServletRequest request, Cart cart, Long productId, String quantity) {
-        return checkInputQuantity("add", request, cart, productId, quantity);
-    }
-
-    @Override
-    public String update(HttpServletRequest request, Cart cart, Long productId, String quantity) {
-        return checkInputQuantity("update", request, cart, productId, quantity);
-    }
-
-    @Override
-    public void delete(Cart cart, Product product) {
-        Optional<CartItem> optionalCartItem  = optionalCartItem(cart, product);
-        cart.setTotalQuantity(cart.getTotalQuantity() - optionalCartItem.get().getQuantity());
-        BigDecimal oldProductPrice = product.getPrice().multiply(new BigDecimal(optionalCartItem.get().getQuantity()));
-        cart.setTotalCost(cart.getTotalCost().subtract(oldProductPrice));
-        cart.getCartItems().removeIf(cartItem -> product.equals(cartItem.getProduct()));
-    }
-
-    private String checkInputQuantity(String typeOfChanging, HttpServletRequest request, Cart cart, Long productId, String quantity){
-        Product product = productDao.getProduct(productId).get();
-        if(!quantity.matches("[\\-]*[1-9]+[\\.0*]*")){
-            return "Not a number!";
+    public String add(HttpSession session, Cart cart, Long productId, String quantity, Locale locale) {
+        Product product = (Product) productDao.getProduct(productId);
+        String errorOfQuantity = quantityHasError(locale, quantity, product.getStock());
+        if(errorOfQuantity == null) {
+            int quantityInt = Integer.parseInt(quantity);
+            Optional<CartItem> optionalCartItem = cart
+                    .getCartItems()
+                    .stream()
+                    .filter(cartItem -> cartItem.getProduct().getId().equals(product.getId()))
+                    .findFirst();
+            if (optionalCartItem.isPresent()) {
+                CartItem cartItem = optionalCartItem.get();
+                cartItem.setQuantity(cartItem.getQuantity() + quantityInt);
+            } else {
+                cart.getCartItems().add(new CartItem(product, quantityInt));
+            }
+            recalculateCart(cart);
+            return null;
         }
+        else {
+            return errorOfQuantity;
+        }
+    }
+
+    @Override
+    public Map<Long, String> update(HttpSession session, Cart cart, String[] productIds, String[] quantities, Locale locale) {
+        Map<Long, String> errors = new HashMap();
+
+        for(int i = 0; i < productIds.length; i++) {
+            Product product = (Product) productDao.getProduct(Long.valueOf(productIds[i]));
+            String errorOfQuantity = quantityHasError(locale, quantities[i], product.getStock());
+            if(errorOfQuantity == null) {
+                int quantityInt = Integer.parseInt(quantities[i]);
+                cart.getCartItems()
+                        .stream()
+                        .filter(cartItem -> cartItem.getProduct().getId().equals(product.getId()))
+                        .findAny()
+                        .ifPresent(cartItem -> cartItem.setQuantity(quantityInt));
+                recalculateCart(cart);
+            }
+            else {
+                errors.put(Long.valueOf(productIds[i]), errorOfQuantity);
+            }
+        }
+        return errors;
+    }
+
+    private String quantityHasError(Locale locale, String quantity, int stock) {
         try {
-            Locale locale = request.getLocale();
             int quantityInt = Integer.parseInt(String.valueOf(NumberFormat.getInstance(locale).parse(quantity)));
-            if(quantityInt < 0){
+            if (quantityInt < 0) {
                 return "Quantity must be positive!";
             }
-            if(quantityInt > product.getStock()){
-                throw new OutOfStockException();
+            if (quantityInt > stock) {
+                return "Error of stock! Max stock = " + stock;
             }
-            changingCart(typeOfChanging, quantityInt, product, cart);
-        } catch (ParseException e) {
-            return "Not a number!";
         }
-        catch (OutOfStockException exception) {
-            return "Error of stock! Max stock = " + exception.getMaxStock(product.getStock());
+        catch(ParseException exception) {
+            return "Not a number";
         }
         return null;
     }
 
-    private void changingCart(String typeOfChanging, int quantityInt, Product product, Cart cart) {
-        Optional<CartItem> optionalCartItem  = optionalCartItem(cart, product);
-
-        if (optionalCartItem.isPresent()) {
-            CartItem cartItem = optionalCartItem.get();
-            switch (typeOfChanging) {
-                case "add": {
-                    cartItem.setQuantity(cartItem.getQuantity() + quantityInt);
-                    recalculateCart(cart, product, quantityInt);
-                }
-                break;
-                case "update": {
-                    cart.setTotalQuantity(cart.getTotalQuantity() - cartItem.getQuantity());
-                    BigDecimal oldProductPrice = cartItem.getProduct().getPrice().multiply(new BigDecimal(cartItem.getQuantity()));
-                    cart.setTotalCost(cart.getTotalCost().subtract(oldProductPrice));
-                    cartItem.setQuantity(quantityInt);
-                    BigDecimal productPrice = product.getPrice().multiply(new BigDecimal(quantityInt));
-                    cart.setTotalCost(cart.getTotalCost().add(productPrice));
-                    cart.setTotalQuantity(cart.getTotalQuantity() + quantityInt);
-                }
-            }
-        } else {
-            cart.getCartItems().add(new CartItem(product, quantityInt));
-            recalculateCart(cart, product, quantityInt);
-        }
+    @Override
+    public void delete(Cart cart, Long productId) {
+        cart.getCartItems().removeIf(cartItem -> cartItem.getProduct().getId().equals(productId));
+        recalculateCart(cart);
     }
 
-
-
-    private Optional<CartItem> optionalCartItem(Cart cart, Product product) {
-        Optional<CartItem> optionalCartItem = cart
-                .getCartItems()
+    private void recalculateCart(Cart cart) {
+        Optional<BigDecimal> totalCost = cart.getCartItems()
                 .stream()
-                .filter(cartItem -> cartItem.getProduct().getId().equals(product.getId()))
-                .findFirst();
-        return optionalCartItem;
-    }
-
-    private void recalculateCart(Cart cart, Product product, int quantity) {
-        BigDecimal productPrice = product.getPrice().multiply(new BigDecimal(quantity));
-        cart.setTotalCost(cart.getTotalCost().add(productPrice));
-        cart.setTotalQuantity(cart.getTotalQuantity() + quantity);
+                .map(cartItem -> cartItem.getProduct().getPrice().multiply(new BigDecimal(cart.getTotalQuantity())))
+                .reduce(BigDecimal::add);
+        Optional<Integer> totalQuantity = cart.getCartItems()
+                .stream()
+                .map(CartItem::getQuantity)
+                .reduce(Integer::compareTo);
+        cart.setTotalCost(totalCost.get());
+        cart.setTotalQuantity(totalQuantity.get());
     }
 }

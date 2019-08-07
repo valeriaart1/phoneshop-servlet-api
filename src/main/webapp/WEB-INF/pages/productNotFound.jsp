@@ -7,6 +7,6 @@
 <a href="${pageContext.servletContext.contextPath}/products"><b>Back to product list<b></a>
 <br>
     <h4>
-        Product with id = ${idProductNotFound} not found!
+        Product not found!
     </h4>
 </tags:master>

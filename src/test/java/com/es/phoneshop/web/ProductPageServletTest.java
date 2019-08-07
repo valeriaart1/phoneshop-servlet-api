@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Deque;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -45,8 +46,6 @@ public class ProductPageServletTest {
     private CartServiceImpl cartService;
     @Mock
     private Cart cart;
-    @Mock
-    private ProductNotFoundException exception;
     @InjectMocks
     private ProductPageServlet servlet;
 
@@ -60,7 +59,7 @@ public class ProductPageServletTest {
 
     @Test
     public void testDoGet() throws ServletException, IOException {
-        when(productDao.getProduct(1L)).thenReturn(Optional.of(product));
+        when(productDao.getProduct(1L)).thenReturn((List<Product>) product);
         cart = cartService.getCart(request);
         servlet.doGet(request, response);
         verify(request).setAttribute("cart", cart);
@@ -73,7 +72,6 @@ public class ProductPageServletTest {
     @Test(expected = NoSuchElementException.class)
     public void testDoGetProductNotFound() throws ServletException, IOException {
         servlet.doGet(request, response);
-        verify(request).setAttribute("idProductNotFound", exception.getProductIdNotFound(product.getId()));
         verify(request).getRequestDispatcher("/WEB-INF/pages/productNotFound.jsp");
         verify(requestDispatcher).forward(request, response);
     }

@@ -38,7 +38,7 @@
           <a href="${pageContext.servletContext.contextPath}/product/${item.product.id}">${item.product.description}</a>
         </td>
         <td>
-          <input name= "quantity" value="${not empty errors[item.product.id] ? paramValues['quantity'][item.product.id] : item.quantity}" style="text-align: right">
+          <input name= "quantity" value="${not empty errors[item.product.id] ? paramValues.quantity[item.product.id] : item.quantity}" style="text-align: right">
           <input type="hidden" name="productId" value="${item.product.id}">
           <c:if test="${not empty errors[item.product.id]}">
             <br><span style="color:red">${errors[item.product.id]}</span>

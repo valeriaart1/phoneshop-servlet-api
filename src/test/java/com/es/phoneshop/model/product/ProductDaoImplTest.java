@@ -1,8 +1,10 @@
 package com.es.phoneshop.model.product;
 
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -17,8 +19,8 @@ public class ProductDaoImplTest {
     private Product productZZZWithId15Price10;
     private Product productAAAWithId16Price100;
 
-    @BeforeMethod
-    public void setUp() throws ProductNotFoundException {
+    @Before
+    public void init() throws ProductNotFoundException {
         usd = Currency.getInstance("USD");
         productDao = ProductDaoImpl.getInstance();
         productAAAWithPrice2000 = new Product(17L, null, "AAA1", new BigDecimal(2000), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Apple/Apple%20iPhone.jpg",
@@ -36,8 +38,8 @@ public class ProductDaoImplTest {
         productDao.save(productAAAWithId16Price100);
     }
 
-    @AfterMethod
-    public void tearDown() {
+    @After
+    public void destroy() {
         productDao.delete(productAAAWithPrice2000.getId());
         productDao.delete(productWithId14Stock0.getId());
         productDao.delete(productZZZWithId15Price10.getId());
@@ -85,7 +87,7 @@ public class ProductDaoImplTest {
         productDao.save(productAAAWithId16Price100);
     }
 
-    @Test(expectedExceptions = ProductNotFoundException.class)
+    @Test(expected = ProductNotFoundException.class)
     public void testDeleteProduct(){
         productDao.delete(16L);
         assertFalse("Error of deleting object!", productDao.equals(productDao.getProduct(16L)));

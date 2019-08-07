@@ -87,12 +87,10 @@ public class SampleDataListener implements ServletContextListener{
         historyMap.put(price3, new PriceHistory(date3, price3, USD));
         historyMap.put(price, new PriceHistory(date4, price, USD));
 
-        LinkedHashMap<BigDecimal, PriceHistory> collect = historyMap
+        return historyMap
                 .entrySet()
                 .stream()
                 .sorted(comparingByKey())
                 .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
-
-        return collect;
     }
 }

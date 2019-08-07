@@ -1,15 +1,16 @@
 package com.es.phoneshop.model.cart;
 
-import com.es.phoneshop.model.product.Product;
-
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Locale;
+import java.util.Map;
 
 public interface CartService {
     Cart getCart(HttpServletRequest request);
 
-    String add(HttpServletRequest request, Cart cart, Long productId, String quantity);
+    String add(HttpSession session, Cart cart, Long productId, String quantity, Locale locale);
 
-    String update(HttpServletRequest request, Cart cart, Long productId, String quantity);
+    Map<Long, String> update(HttpSession session, Cart cart, String[] productIds, String[] quantities, Locale locale);
 
-    void delete(Cart cart, Product product);
+    void delete(Cart cart, Long productId);
 }

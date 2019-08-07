@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class CartPageServlet extends HttpServlet {
@@ -32,18 +32,12 @@ public class CartPageServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        Cart cart = cartService.getCart(request);
         String[] productIds = request.getParameterValues("productId");
         String[] quantities = request.getParameterValues("quantity");
-        Map<Long, String> errors = new HashMap();
+        Locale locale = request.getLocale();
 
-        Cart cart = cartService.getCart(request);
-
-        for(int i = 0; i < productIds.length; i++) {
-            String QUANTITY_ERROR = cartService.update(request, cart, Long.valueOf(productIds[i]), quantities[i]);
-            if(QUANTITY_ERROR != null) {
-                errors.put(Long.valueOf(productIds[i]), QUANTITY_ERROR);
-            }
-        }
+        Map<Long, String> errors = cartService.update(request.getSession(), cart, productIds, quantities, locale);
         request.setAttribute("errors", errors);
         if(errors.isEmpty()){
             response.sendRedirect(request.getRequestURI() + MESSAGE_SUCCESS_UPDATING);

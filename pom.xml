@@ -37,11 +37,6 @@
             <version>2.23.0</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>6.3</version>
-        </dependency>
     </dependencies>
     <build>
         <finalName>phoneshop-servlet-api</finalName>
@@ -66,4 +61,3 @@
         </plugins>
     </build>
 </project>
-
