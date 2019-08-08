@@ -5,15 +5,14 @@ import com.es.phoneshop.model.product.ProductDao;
 import com.es.phoneshop.model.product.ProductDaoImpl;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public class CartServiceImpl implements CartService {
-    private static final String CART_SESSION_ATTRIBUTE = CartServiceImpl.class + ".cart";
+    private static final String CART_SESSION_ATTRIBUTE = "cart";
     private ProductDao productDao = ProductDaoImpl.getInstance();
     private static volatile CartServiceImpl instance;
 
@@ -42,66 +41,85 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CartServiceImpl that = (CartServiceImpl) o;
-        return Objects.equals(productDao, that.productDao);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(productDao);
-    }
-
-    @Override
-    public String toString() {
-        return "CartServiceImpl{" +
-                "productDao=" + productDao +
-                '}';
-    }
-
-    @Override
-    public String add(HttpServletRequest request, Cart cart, Long productId) {
-        Product product = productDao.getProduct(productId).get();
-        if(!request.getParameter("quantity").matches("[\\-]*[1-9]+[\\.0*]*")){
-            return "Not a number!";
-        }
-        try {
-            Locale locale = request.getLocale();
-            String parameterQuantity = request.getParameter("quantity");
-            int quantity = Integer.parseInt(String.valueOf(NumberFormat.getInstance(locale).parse(parameterQuantity)));
-            if(quantity < 0){
-                return "Quantity must be positive!";
-            }
-            if(quantity > product.getStock()){
-                throw new OutOfStockException();
-            }
+    public String add(HttpSession session, Cart cart, Long productId, String quantity, Locale locale) {
+        Product product = (Product) productDao.getProduct(productId);
+        String errorOfQuantity = quantityHasError(locale, quantity, product.getStock());
+        if(errorOfQuantity == null) {
+            int quantityInt = Integer.parseInt(quantity);
             Optional<CartItem> optionalCartItem = cart
                     .getCartItems()
                     .stream()
-                    .filter(cartItem -> cartItem.getProductId().equals(productId))
+                    .filter(cartItem -> cartItem.getProduct().getId().equals(product.getId()))
                     .findFirst();
             if (optionalCartItem.isPresent()) {
                 CartItem cartItem = optionalCartItem.get();
-                cartItem.setQuantity(cartItem.getQuantity() + quantity);
+                cartItem.setQuantity(cartItem.getQuantity() + quantityInt);
             } else {
-                cart.getCartItems().add(new CartItem(productId, quantity));
+                cart.getCartItems().add(new CartItem(product, quantityInt));
             }
-            recalculateCart(cart, product, quantity);
-        } catch (ParseException e) {
-            return "Not a number!";
+            recalculateCart(cart);
+            return null;
         }
-        catch (OutOfStockException exception) {
-            return "Error of stock! Max stock = " + exception.getMaxStock(product.getStock());
+        else {
+            return errorOfQuantity;
+        }
+    }
+
+    @Override
+    public Map<Long, String> update(HttpSession session, Cart cart, String[] productIds, String[] quantities, Locale locale) {
+        Map<Long, String> errors = new HashMap();
+
+        for(int i = 0; i < productIds.length; i++) {
+            Product product = (Product) productDao.getProduct(Long.valueOf(productIds[i]));
+            String errorOfQuantity = quantityHasError(locale, quantities[i], product.getStock());
+            if(errorOfQuantity == null) {
+                int quantityInt = Integer.parseInt(quantities[i]);
+                cart.getCartItems()
+                        .stream()
+                        .filter(cartItem -> cartItem.getProduct().getId().equals(product.getId()))
+                        .findAny()
+                        .ifPresent(cartItem -> cartItem.setQuantity(quantityInt));
+                recalculateCart(cart);
+            }
+            else {
+                errors.put(Long.valueOf(productIds[i]), errorOfQuantity);
+            }
+        }
+        return errors;
+    }
+
+    private String quantityHasError(Locale locale, String quantity, int stock) {
+        try {
+            int quantityInt = Integer.parseInt(String.valueOf(NumberFormat.getInstance(locale).parse(quantity)));
+            if (quantityInt < 0) {
+                return "Quantity must be positive!";
+            }
+            if (quantityInt > stock) {
+                return "Error of stock! Max stock = " + stock;
+            }
+        }
+        catch(ParseException exception) {
+            return "Not a number";
         }
         return null;
     }
 
-    private void recalculateCart(Cart cart, Product product, int quantity) {
-        BigDecimal productPrice = product.getPrice().multiply(new BigDecimal(quantity));
-        cart.setTotalCost(cart.getTotalCost().add(productPrice));
-        cart.setTotalQuantity(cart.getTotalQuantity() + quantity);
-        product.setStock(product.getStock() - Integer.parseInt(String.valueOf(quantity)));
+    @Override
+    public void delete(Cart cart, Long productId) {
+        cart.getCartItems().removeIf(cartItem -> cartItem.getProduct().getId().equals(productId));
+        recalculateCart(cart);
+    }
+
+    private void recalculateCart(Cart cart) {
+        Optional<BigDecimal> totalCost = cart.getCartItems()
+                .stream()
+                .map(cartItem -> cartItem.getProduct().getPrice().multiply(new BigDecimal(cart.getTotalQuantity())))
+                .reduce(BigDecimal::add);
+        Optional<Integer> totalQuantity = cart.getCartItems()
+                .stream()
+                .map(CartItem::getQuantity)
+                .reduce(Integer::compareTo);
+        cart.setTotalCost(totalCost.get());
+        cart.setTotalQuantity(totalQuantity.get());
     }
 }

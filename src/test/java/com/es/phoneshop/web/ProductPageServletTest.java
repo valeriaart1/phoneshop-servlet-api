@@ -1,13 +1,5 @@
 package com.es.phoneshop.web;
 
-<<<<<<< HEAD
-import com.es.phoneshop.model.product.ArrayListProductDao;
-import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.model.product.ProductDao;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-=======
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartServiceImpl;
 import com.es.phoneshop.model.product.Product;
@@ -18,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
->>>>>>> Valeria3
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -27,20 +18,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-<<<<<<< HEAD
-
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-=======
 import java.util.Deque;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
->>>>>>> Valeria3
 @RunWith(MockitoJUnitRunner.class)
 public class ProductPageServletTest {
     @Mock
@@ -50,41 +35,6 @@ public class ProductPageServletTest {
     @Mock
     private RequestDispatcher requestDispatcher;
     @Mock
-<<<<<<< HEAD
-    Product product;
-    @Mock
-    private ProductDao testProduct;
-    private ProductPageServlet servlet = new ProductPageServlet();
-
-    @Before
-    public void setup() {
-        when(product.getId()).thenReturn(1L);
-    }
-
-    @Test(expected = NumberFormatException.class)
-    public void testDoGetBadPath() throws ServletException, IOException {
-        when(request.getPathInfo()).thenReturn("null");
-        servlet.doGet(request, response);
-
-        verify(request).getRequestDispatcher("/WEB-INF/pages/product.jsp");
-        verify(requestDispatcher).forward(request, response);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void testDoGet() throws ServletException, IOException {
-        testProduct = ArrayListProductDao.getInstance();
-
-        testProduct.save(product);
-
-        when(request.getPathInfo()).thenReturn("/3");
-        servlet.doGet(request, response);
-
-        verify(request).getRequestDispatcher("/WEB-INF/pages/product.jsp");
-        verify(requestDispatcher).forward(request, response);
-    }
-
-}
-=======
     private ProductDao productDao;
     @Mock
     private Product product;
@@ -96,8 +46,6 @@ public class ProductPageServletTest {
     private CartServiceImpl cartService;
     @Mock
     private Cart cart;
-    @Mock
-    private ProductNotFoundException exception;
     @InjectMocks
     private ProductPageServlet servlet;
 
@@ -111,7 +59,7 @@ public class ProductPageServletTest {
 
     @Test
     public void testDoGet() throws ServletException, IOException {
-        when(productDao.getProduct(1L)).thenReturn(Optional.of(product));
+        when(productDao.getProduct(1L)).thenReturn((List<Product>) product);
         cart = cartService.getCart(request);
         servlet.doGet(request, response);
         verify(request).setAttribute("cart", cart);
@@ -124,7 +72,6 @@ public class ProductPageServletTest {
     @Test(expected = NoSuchElementException.class)
     public void testDoGetProductNotFound() throws ServletException, IOException {
         servlet.doGet(request, response);
-        verify(request).setAttribute("idProductNotFound", exception.getProductIdNotFound(product.getId()));
         verify(request).getRequestDispatcher("/WEB-INF/pages/productNotFound.jsp");
         verify(requestDispatcher).forward(request, response);
     }
@@ -140,4 +87,3 @@ public class ProductPageServletTest {
         verify(request).getPathInfo().substring(1);
     }
 }
->>>>>>> Valeria3

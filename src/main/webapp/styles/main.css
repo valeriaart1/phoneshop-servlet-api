@@ -29,7 +29,6 @@ table.product {
  background: none;
  border: 0;
 }
-
 body.product-list {
 }
 .overlay {
@@ -56,18 +55,15 @@ margin: 0;
 width: 85%;
 min-width: 320px;
 max-width: 600px;
-
 position: fixed;
 padding: 15px;
 border: 1px solid #383838;
 background: #7FFFD4;
-
 -webkit-border-radius: 4px;
 -moz-border-radius: 4px;
 -ms-border-radius: 4px;
 border-radius: 4px;
 font: 14px/18px 'Tahoma', Arial, sans-serif;
-
 -webkit-box-shadow: 0 15px 20px rgba(0,0,0,.22),0 19px 60px rgba(0,0,0,.3);
 -moz-box-shadow: 0 15px 20px rgba(0,0,0,.22),0 19px 60px rgba(0,0,0,.3);
 -ms-box-shadow: 0 15px 20px rgba(0,0,0,.22),0 19px 60px rgba(0,0,0,.3);
@@ -81,7 +77,6 @@ transform: translate(-50%, -500%);
 -o-transition: -o-transform 0.6s ease-out;
 transition: transform 0.6s ease-out;
 }
-
 .overlay:target+.popup {
 -webkit-transform: translate(-50%, 0);
 -ms-transform: translate(-50%, 0);
@@ -89,7 +84,6 @@ transition: transform 0.6s ease-out;
 transform: translate(-50%, 0);
 top: 20%;
 }
-
 .close {
 top: -10px;
 right: -10px;
@@ -117,14 +111,12 @@ font-weight: bold;
 -o-transition: all ease .8s;
 transition: all ease .8s;
 }
-
 .close:before {
 color: rgba(255, 255, 255, 0.9);
 content: "X";
 text-shadow: 0 -1px rgba(0, 0, 0, 0.9);
 font-size: 12px;
 }
-
 .close:hover {
 background-color: rgba(252, 20, 0, 0.8);
 -webkit-transform: rotate(360deg);
@@ -133,4 +125,3 @@ background-color: rgba(252, 20, 0, 0.8);
 -o-transform: rotate(360deg);
 transform: rotate(360deg);
 }
-

@@ -1,7 +1,6 @@
 package com.es.phoneshop.model.product;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Map;
 import java.util.Objects;
@@ -16,7 +15,6 @@ public class Product {
     private Currency currency;
     private int stock;
     private String imageUrl;
-
     private Map<BigDecimal, PriceHistory> history;
 
     public Product() {
@@ -109,6 +107,7 @@ public class Product {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
     public Map<BigDecimal, PriceHistory> getHistory() {
         return history;
     }

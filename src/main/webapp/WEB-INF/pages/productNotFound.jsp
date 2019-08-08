@@ -3,11 +3,10 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
-<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
-
-<tags:master pageTitle="Exception">
+<tags:master pageTitle="Exception" pageClass="exception">
+<a href="${pageContext.servletContext.contextPath}/products"><b>Back to product list<b></a>
 <br>
     <h4>
-        Product with id = ${idProductNotFound} not found!
+        Product not found!
     </h4>
 </tags:master>

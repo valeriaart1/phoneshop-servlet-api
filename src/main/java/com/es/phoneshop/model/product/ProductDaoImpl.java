@@ -2,7 +2,6 @@ package com.es.phoneshop.model.product;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -25,15 +24,13 @@ public class ProductDaoImpl implements ProductDao{
     }
 
     @Override
-    public Optional<Product> getProduct(Long id) {
-        Optional<Product> optionalProducts = products
+    public List<Product> getProduct(Long id) {
+        products
                 .stream()
                 .filter(products -> products.getId().equals(id))
-                .findFirst();
-        if(!optionalProducts.isPresent()) {
-            throw new ProductNotFoundException();
-        }
-        return optionalProducts;
+                .findFirst()
+                .orElseThrow(() -> new ProductNotFoundException("Product with  id: " + id + " isn't"));
+        return products;
     }
     public List<Product> findProducts(String query) {
         List<Product> productsWithFilter = new ArrayList<>();
@@ -64,7 +61,7 @@ public class ProductDaoImpl implements ProductDao{
             String sortOrder = sort + " " + order;
             resultListProducts = products
                     .stream()
-                    .sorted(getSortOrder(sortOrder))
+                    .sorted(SortBy.getSortOrder(sortOrder))
                     .collect(Collectors.toList());
         }
         else {
@@ -72,15 +69,6 @@ public class ProductDaoImpl implements ProductDao{
         }
         return resultListProducts;
     }
-
-    private static SortBy getSortOrder(String sortOrder) {
-        if (sortOrder.contains("description")) {
-            return sortOrder.contains("asc") ? SortBy.DESCRIPTION_ASC : SortBy.DESCRIPTION_DESC;
-        } else {
-            return sortOrder.contains("asc") ? SortBy.PRICE_ASC : SortBy.PRICE_DESC;
-        }
-    }
-
 
     @Override
     public void save(Product product){
