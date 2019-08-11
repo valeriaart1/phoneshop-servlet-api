@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.Currency;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -54,46 +55,83 @@ public class ProductDaoImplTest {
 
     @Test(expected = ProductNotFoundException.class)
     public void getProductAssertFalse(){
-        assertFalse("Error of false getting product!", productDao.equals(productDao.getProduct(20L)));
+        assertFalse("Error of false getting product!",
+                productDao.equals(productDao.getProduct(20L)));
     }
 
     @Test
     public void findProductsStock0() {
-        assertFalse("Error of finding product with stock = 0!", productDao.findProducts(null).contains(productWithId14Stock0));
+        assertFalse("Error of finding product with stock = 0!",
+                productDao.findProducts(null).contains(productWithId14Stock0));
     }
 
     @Test
     public void testSizeFindingProducts() {
-        assertEquals("Error of size finding product!", 3, productDao.findProducts(null).size());
+        assertEquals("Error of size finding product!", 3,
+                productDao.findProducts(null).size());
     }
 
     @Test
     public void findProductsAssertTrue() {
-        assertTrue("Error of true finding product!", productDao.findProducts("AAA2").contains(productAAA2WithId16Price100));
+        assertTrue("Error of true finding product!",
+                productDao.findProducts("AAA2").contains(productAAA2WithId16Price100));
     }
 
     @Test
     public void findProductsAssertFalse() {
-        assertFalse("Error of false finding product!", productDao.findProducts("AAA1").contains(productAAA2WithId16Price100));
+        assertFalse("Error of false finding product!",
+                productDao.findProducts("AAA1").contains(productAAA2WithId16Price100));
     }
 
     @Test
     public void findProductsComplexFirstNameTrue() {
-        assertTrue("Error of true finding complex first name of product!", productDao.findProducts("AAA2 Lena").contains(productAAA2WithId16Price100));
+        assertTrue("Error of true finding complex first name of product!",
+                productDao.findProducts("AAA2 Lena").contains(productAAA2WithId16Price100));
     }
 
     @Test
     public void findProductsComplexFirstNameFalse() {
-        assertFalse("Error of false finding complex first name of product!", productDao.findProducts("AAA2 Lena").contains(productAAA1WithPrice2000));
+        assertFalse("Error of false finding complex first name of product!",
+                productDao.findProducts("AAA2 Lena").contains(productAAA1WithPrice2000));
     }
 
     @Test
     public void findProductsComplexSecondNameTrue() {
-        assertTrue("Error of true finding complex second name of product!", productDao.findProducts("Lena AAA1").contains(productAAA1WithPrice2000));
+        assertTrue("Error of true finding complex second name of product!",
+                productDao.findProducts("Lena AAA1").contains(productAAA1WithPrice2000));
     }
 
     @Test
     public void findProductsComplexSecondNameFalse() {
-        assertFalse("Error of false finding complex second name of product!", productDao.findProducts("Lena AAA1").contains(productAAA2WithId16Price100));
+        assertFalse("Error of false finding complex second name of product!",
+                productDao.findProducts("Lena AAA1").contains(productAAA2WithId16Price100));
+    }
+
+    @Test
+    public void sortByParameterDescriptionAsc() {
+        assertTrue("Error of false finding complex second name of product!",
+                productDao.sortByParameter(productDao.findProducts(null), "description", "asc")
+                        .get(0).equals(productAAA1WithPrice2000));
+    }
+
+    @Test
+    public void sortByParameterDescriptionDesc() {
+        assertTrue("Error of false finding complex second name of product!",
+                productDao.sortByParameter(productDao.findProducts(null), "description", "desc")
+                        .get(0).equals(productZZZWithId15Price10));
+    }
+
+    @Test
+    public void sortByParameterPriceAsc() {
+        assertTrue("Error of false finding complex second name of product!",
+                productDao.sortByParameter(productDao.findProducts(null), "price", "asc")
+                        .get(0).equals(productZZZWithId15Price10));
+    }
+
+    @Test
+    public void sortByParameterPriceDescQuery() {
+        assertTrue("Error of false finding complex second name of product!",
+                productDao.sortByParameter(productDao.findProducts(null), "price", "desc")
+                        .get(0).equals(productAAA1WithPrice2000));
     }
 }
