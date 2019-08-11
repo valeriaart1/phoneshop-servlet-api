@@ -109,29 +109,78 @@ public class ProductDaoImplTest {
 
     @Test
     public void sortByParameterDescriptionAsc() {
-        assertTrue("Error of false finding complex second name of product!",
+        assertTrue("Error of sorting products by description asc!",
                 productDao.sortByParameter(productDao.findProducts(null), "description", "asc")
                         .get(0).equals(productAAA1WithPrice2000));
     }
 
     @Test
     public void sortByParameterDescriptionDesc() {
-        assertTrue("Error of false finding complex second name of product!",
+        assertTrue("Error of sorting products by description desc!",
                 productDao.sortByParameter(productDao.findProducts(null), "description", "desc")
                         .get(0).equals(productZZZWithId15Price10));
     }
 
     @Test
     public void sortByParameterPriceAsc() {
-        assertTrue("Error of false finding complex second name of product!",
+        assertTrue("Error of sorting products by price asc!",
                 productDao.sortByParameter(productDao.findProducts(null), "price", "asc")
                         .get(0).equals(productZZZWithId15Price10));
     }
 
     @Test
     public void sortByParameterPriceDescQuery() {
-        assertTrue("Error of false finding complex second name of product!",
+        assertTrue("Error of sorting products by price desc!",
                 productDao.sortByParameter(productDao.findProducts(null), "price", "desc")
                         .get(0).equals(productAAA1WithPrice2000));
+    }
+
+    @Test
+    public void saveProductWithSameId() {
+        Product testProduct = new Product();
+        testProduct.setId(16L);
+        testProduct.setStock(3);
+        testProduct.setPrice(new BigDecimal(200));
+        productDao.save(testProduct);
+        assertEquals("Error of saving product with the same id!", testProduct.getPrice(),
+                productDao.getProduct(16L).getPrice());
+        productDao.delete(testProduct.getId());
+    }
+
+    @Test
+    public void testSizeSavingProductWithSameId() {
+        int size = productDao.findProducts(null).size();
+        Product testProduct = new Product();
+        testProduct.setId(16L);
+        testProduct.setStock(3);
+        testProduct.setPrice(new BigDecimal(200));
+        productDao.save(testProduct);
+        assertEquals("Error of size saving product with the same id!", size,
+                productDao.findProducts(null).size());
+        productDao.delete(testProduct.getId());
+    }
+
+    @Test
+    public void testSizeSavingProduct() {
+        int size = productDao.findProducts(null).size();
+        Product testProduct = new Product();
+        testProduct.setId(21L);
+        testProduct.setStock(3);
+        testProduct.setPrice(new BigDecimal(200));
+        productDao.save(testProduct);
+        assertEquals("Error of size saving product!", size + 1,
+                productDao.findProducts(null).size());
+        productDao.delete(testProduct.getId());
+    }
+
+    @Test
+    public void testSavingProduct() {
+        Product testProduct = new Product();
+        testProduct.setId(21L);
+        testProduct.setStock(3);
+        testProduct.setPrice(new BigDecimal(200));
+        productDao.save(testProduct);
+        assertTrue("Error of saving product!", productDao.findProducts(null).contains(testProduct));
+        productDao.delete(testProduct.getId());
     }
 }
