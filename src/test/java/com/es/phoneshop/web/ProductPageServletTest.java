@@ -53,14 +53,14 @@ public class ProductPageServletTest {
     public void setup() {
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
         when(request.getPathInfo()).thenReturn("/1");
-        when(cartService.getCart(request)).thenReturn(cart);
+        when(cartService.getCart(request.getSession())).thenReturn(cart);
         when(viewedProducts.getViewedProducts(request.getSession())).thenReturn(dequeViewedProducts);
     }
 
     @Test
     public void testDoGet() throws ServletException, IOException {
-        when(productDao.getProduct(1L)).thenReturn((List<Product>) product);
-        cart = cartService.getCart(request);
+        when(productDao.getProduct(1L)).thenReturn(product);
+        cart = cartService.getCart(request.getSession());
         servlet.doGet(request, response);
         verify(request).setAttribute("cart", cart);
         verify(request).setAttribute("product", product);
