@@ -69,21 +69,8 @@ public class ProductPageServletTest {
         verify(requestDispatcher).forward(request, response);
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void testDoGetProductNotFound() throws ServletException, IOException {
-        servlet.doGet(request, response);
-        verify(request).getRequestDispatcher("/WEB-INF/pages/productNotFound.jsp");
-        verify(requestDispatcher).forward(request, response);
-    }
-
     @Test
     public void testDoPost() throws ServletException, IOException {
         servlet.doPost(request, response);
-    }
-
-    @Test(expected = NoSuchElementException.class)
-    public void loadProduct() throws ServletException, IOException {
-        servlet.doGet(request, response);
-        verify(request).getPathInfo().substring(1);
     }
 }
