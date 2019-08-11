@@ -183,4 +183,21 @@ public class ProductDaoImplTest {
         assertTrue("Error of saving product!", productDao.findProducts(null).contains(testProduct));
         productDao.delete(testProduct.getId());
     }
+
+    @Test
+    public void deleteProduct() {
+        productDao.delete(productAAA2WithId16Price100.getId());
+        assertFalse("Error of deleting product!",
+                productDao.findProducts(null).contains(productAAA2WithId16Price100));
+        productDao.save(productAAA2WithId16Price100);
+    }
+
+    @Test
+    public void testSizeTrueDeletingProduct() {
+        int size = productDao.findProducts(null).size();
+        productDao.delete(productAAA2WithId16Price100.getId());
+        assertEquals("Error of size deleting product!", size - 1,
+                productDao.findProducts(null).size());
+        productDao.save(productAAA2WithId16Price100);
+    }
 }
