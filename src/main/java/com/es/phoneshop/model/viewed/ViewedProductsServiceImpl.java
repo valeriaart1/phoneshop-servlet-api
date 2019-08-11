@@ -15,7 +15,7 @@ public class ViewedProductsServiceImpl implements ViewedProductsService {
     }
 
     public static ViewedProductsServiceImpl getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new ViewedProductsServiceImpl();
         }
         return instance;
@@ -24,7 +24,7 @@ public class ViewedProductsServiceImpl implements ViewedProductsService {
     @Override
     public Deque<Product> getViewedProducts(HttpSession session) {
         Deque<Product> result = (Deque<Product>) session.getAttribute(VIEWED_SESSION_ATTRIBUTE);
-        if(result == null) {
+        if (result == null) {
             result = new ArrayDeque<>();
             session.setAttribute(VIEWED_SESSION_ATTRIBUTE, result);
         }
@@ -36,11 +36,10 @@ public class ViewedProductsServiceImpl implements ViewedProductsService {
         boolean dequeHasProductId = dequeProducts
                 .stream()
                 .anyMatch(p -> p.getId().equals(product.getId()));
-        if(dequeHasProductId) {
+        if (dequeHasProductId) {
             dequeProducts.remove(product);
-        }
-        else {
-            if(dequeProducts.size() == 3){
+        } else {
+            if (dequeProducts.size() == 3) {
                 dequeProducts.removeLast();
             }
         }

@@ -11,14 +11,14 @@ import java.util.*;
 import static java.util.Map.Entry.comparingByKey;
 import static java.util.stream.Collectors.toMap;
 
-public class SampleDataListener implements ServletContextListener{
+public class SampleDataListener implements ServletContextListener {
 
     private static final Currency USD = Currency.getInstance("USD");
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         String insertSampleData = servletContextEvent.getServletContext().getInitParameter("insertSampleData");
-        if("true".equals(insertSampleData)) {
+        if ("true".equals(insertSampleData)) {
             ProductDao productDao = ProductDaoImpl.getInstance();
             getSampleProducts().forEach(product -> {
                 try {
@@ -78,9 +78,9 @@ public class SampleDataListener implements ServletContextListener{
         BigDecimal price3 = price.multiply(value09);
 
         LocalDate date1 = LocalDate.of(2018, 9, 6);
-        LocalDate date2 = LocalDate.of(2019, 1,9);
+        LocalDate date2 = LocalDate.of(2019, 1, 9);
         LocalDate date3 = LocalDate.of(2019, 3, 22);
-        LocalDate date4 = LocalDate.of(2019, 6,30);
+        LocalDate date4 = LocalDate.of(2019, 6, 30);
 
         historyMap.put(price1, new PriceHistory(date1, price1, USD));
         historyMap.put(price2, new PriceHistory(date2, price2, USD));

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
-public class ProductDaoImpl implements ProductDao{
+public class ProductDaoImpl implements ProductDao {
     private static ProductDaoImpl instance;
     private List<Product> products = new CopyOnWriteArrayList<>();
 
@@ -13,9 +13,9 @@ public class ProductDaoImpl implements ProductDao{
     }
 
     public static ProductDaoImpl getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             synchronized (ProductDaoImpl.class) {
-                if(instance == null) {
+                if (instance == null) {
                     instance = new ProductDaoImpl();
                 }
             }
@@ -24,55 +24,54 @@ public class ProductDaoImpl implements ProductDao{
     }
 
     @Override
-    public List<Product> getProduct(Long id) {
-        products
+    public Product getProduct(Long id) {
+        Product product = products
                 .stream()
                 .filter(products -> products.getId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new ProductNotFoundException("Product with  id: " + id + " isn't"));
-        return products;
+        return product;
     }
+
     public List<Product> findProducts(String query) {
         List<Product> productsWithFilter = new ArrayList<>();
-        if(query != null) {
+        if (query != null) {
             String[] words = query.split("\\s");
-            for(String wordForSearching : words) {
+            for (String wordForSearching : words) {
                 productsWithFilter.addAll(products
                         .stream()
                         .filter(products -> products.getDescription().contains(wordForSearching))
                         .collect(Collectors.toList()));
             }
-        }
-        else {
+        } else {
             productsWithFilter = products;
         }
         List<Product> filtered = new ArrayList<>();
         productsWithFilter
                 .stream()
                 .filter(products -> products.getPrice() != null && products.getStock() > 0)
-                .forEach(products->filtered.add(products));
+                .forEach(products -> filtered.add(products));
         return filtered;
     }
 
-    public List<Product> sortByParameter(List<Product> products, String sort, String order){
-        if(products == null) return null;
+    public List<Product> sortByParameter(List<Product> products, String sort, String order) {
+        if (products == null) return null;
         List<Product> resultListProducts;
-        if(sort != null && order != null) {
+        if (sort != null && order != null) {
             String sortOrder = sort + " " + order;
             resultListProducts = products
                     .stream()
                     .sorted(SortBy.getSortOrder(sortOrder))
                     .collect(Collectors.toList());
-        }
-        else {
+        } else {
             resultListProducts = products;
         }
         return resultListProducts;
     }
 
     @Override
-    public void save(Product product){
-        if(product != null) {
+    public void save(Product product) {
+        if (product != null) {
             boolean flag = products
                     .stream()
                     .anyMatch(p -> p.getId().equals(product.getId()));
@@ -85,7 +84,7 @@ public class ProductDaoImpl implements ProductDao{
 
     @Override
     public void delete(Long id) {
-        if(id != null) {
+        if (id != null) {
             products.removeIf(p -> p.getId().equals(id));
         }
     }

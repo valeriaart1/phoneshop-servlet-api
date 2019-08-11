@@ -13,7 +13,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class CartPageServlet extends HttpServlet {
-    private static final String MESSAGE_SUCCESS_UPDATING= "?message=Updated successfully";
+    private static final String MESSAGE_SUCCESS_UPDATING = "?message=Updated successfully";
     private CartService cartService;
 
     @Override
@@ -24,25 +24,23 @@ public class CartPageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("cart", cartService.getCart(request));
+        request.setAttribute("cart", cartService.getCart(request.getSession()));
         request.getRequestDispatcher("/WEB-INF/pages/cart.jsp")
                 .forward(request, response);
     }
 
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        Cart cart = cartService.getCart(request);
+        Cart cart = cartService.getCart(request.getSession());
         String[] productIds = request.getParameterValues("productId");
         String[] quantities = request.getParameterValues("quantity");
         Locale locale = request.getLocale();
 
         Map<Long, String> errors = cartService.update(request.getSession(), cart, productIds, quantities, locale);
         request.setAttribute("errors", errors);
-        if(errors.isEmpty()){
+        if (errors.isEmpty()) {
             response.sendRedirect(request.getRequestURI() + MESSAGE_SUCCESS_UPDATING);
-        }
-        else {
+        } else {
             doGet(request, response);
         }
     }

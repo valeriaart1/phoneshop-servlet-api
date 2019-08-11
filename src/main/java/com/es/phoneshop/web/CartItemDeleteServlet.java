@@ -15,19 +15,17 @@ import java.util.NoSuchElementException;
 
 public class CartItemDeleteServlet extends HttpServlet {
     private CartService cartService;
-    private ProductDao productDao;
 
     @Override
     public void init() throws ServletException {
         super.init();
-        productDao = ProductDaoImpl.getInstance();
         cartService = CartServiceImpl.getInstance();
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Long productId = Long.valueOf(loadProduct(request));
-        Cart cart = cartService.getCart(request);
+        Cart cart = cartService.getCart(request.getSession());
         cartService.delete(cart, productId);
 
         response.sendRedirect(request.getContextPath()
@@ -35,7 +33,7 @@ public class CartItemDeleteServlet extends HttpServlet {
     }
 
     private Long loadProduct(HttpServletRequest request) throws NoSuchElementException {
-        String idString = request.getRequestURI().substring((request.getContextPath() + request.getServletPath()).length()+1);
+        String idString = request.getRequestURI().substring((request.getContextPath() + request.getServletPath()).length() + 1);
         Long id = Long.parseLong(idString);
         return id;
     }

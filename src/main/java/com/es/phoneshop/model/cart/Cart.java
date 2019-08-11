@@ -11,6 +11,15 @@ public class Cart implements Serializable {
     private BigDecimal totalCost = new BigDecimal(0);
     private int totalQuantity = 0;
 
+    public Cart() {
+    }
+
+    public Cart(List<CartItem> cartItems, BigDecimal totalCost, int totalQuantity) {
+        this.cartItems = cartItems;
+        this.totalCost = totalCost;
+        this.totalQuantity = totalQuantity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -52,6 +61,7 @@ public class Cart implements Serializable {
     public List<CartItem> getCartItems() {
         return cartItems;
     }
+
     public void setCartItems(List<CartItem> cartItems) {
         this.cartItems = cartItems;
     }
