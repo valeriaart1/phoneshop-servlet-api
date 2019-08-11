@@ -105,7 +105,14 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void delete(Cart cart, Long productId) {
+        int quantity = cart.getCartItems()
+                .stream()
+                .filter(cartItem -> cartItem.getProduct().getId().equals(productId))
+                .findAny()
+                .get()
+                .getQuantity();
         cart.getCartItems().removeIf(cartItem -> cartItem.getProduct().getId().equals(productId));
+        productDao.getProduct(productId).setStock(productDao.getProduct(productId).getStock() + quantity);
         recalculateCart(cart);
     }
 
