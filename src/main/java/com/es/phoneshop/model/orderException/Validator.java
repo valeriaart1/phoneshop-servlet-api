@@ -1,10 +1,8 @@
 package com.es.phoneshop.model.orderException;
 
 import com.es.phoneshop.model.cart.Cart;
-import com.es.phoneshop.model.order.DeliveryMode;
 import com.es.phoneshop.model.order.Order;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,7 +12,7 @@ import static com.es.phoneshop.model.order.PaymentMethod.getPaymentMethod;
 
 public class Validator {
     public static String validateFirstName(Order order, String firstName) {
-        Pattern pattern = Pattern.compile("[A-Z][a-z]+");
+        Pattern pattern = Pattern.compile("([A-Z][a-z]+([\\-][A-Z][a-z]+)*)|([А-Я][а-я]+([\\-][А-Я][а-я]+)*)");
         Matcher matcher = pattern.matcher(firstName);
 
         if (firstName == null || firstName.isEmpty()) {
@@ -30,7 +28,7 @@ public class Validator {
     }
 
     public static String validateLastName(Order order, String lastName) {
-        Pattern pattern = Pattern.compile("[A-Z][a-z]+");
+        Pattern pattern = Pattern.compile("([A-Z][a-z]+([\\-][A-Z][a-z]+)*)|([А-Я][а-я]+([\\-][А-Я][а-я]+)*)");
         Matcher matcher = pattern.matcher(lastName);
 
         if (lastName == null || lastName.isEmpty()) {

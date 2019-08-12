@@ -72,6 +72,6 @@
             </tr>
         </table><br>
     <button>Update</button>
-    <a href="${pageContext.servletContext.contextPath}/checkout">Go To Checkout</a>
+    <button href="${pageContext.servletContext.contextPath}/checkout">Go To Checkout</button>
 </form>
 </tags:master>

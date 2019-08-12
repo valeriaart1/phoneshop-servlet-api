@@ -29,7 +29,7 @@ public class CheckoutPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Cart cart = cartService.getCart(request.getSession());
         Order order = orderService.createOrder(cart);
-        request.getSession(true).setAttribute("order", order);
+        request.setAttribute("order", order);
         request.getRequestDispatcher("/WEB-INF/pages/checkout.jsp")
                 .forward(request, response);
     }
