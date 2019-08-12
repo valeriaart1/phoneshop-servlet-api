@@ -4,7 +4,7 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <jsp:useBean id="order" class="com.es.phoneshop.model.order.Order" scope="session"/>
-<tags:master pageTitle="Checkout" pageClass="checkout">
+<tags:master pageTitle="Overview" pageClass="overview">
     <a href="${pageContext.servletContext.contextPath}/products"><b>Back to product list<b></a>
     <form method="post">
         <pre>                            <b><FONT size="+3">Overview</font></b> </pre>

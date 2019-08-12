@@ -22,7 +22,6 @@ public class OrderOverviewPageServlet extends HttpServlet {
         int idIndex = uri.lastIndexOf("/");
         String id = uri.substring(idIndex + 1);
         Order order = orderDao.getBySecureId(id);
-        request.setCharacterEncoding("UTF-8");
         request.setAttribute("order", order);
         request.getRequestDispatcher("/WEB-INF/pages/orderOverview.jsp").forward(request, response);
     }

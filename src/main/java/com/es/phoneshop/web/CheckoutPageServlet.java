@@ -44,7 +44,8 @@ public class CheckoutPageServlet extends HttpServlet {
 
         errors = orderService.isOrderValid(errors, order, request);
 
-        if (errors.get("") != null) {
+        if (errors.get("firstNameError") != null || errors.get("lastNameError") != null ||
+                errors.get("phoneError") != null || errors.get("deliveryAddressError") != null) {
             Set keys = errors.keySet();
             for (Object key : keys) {
                 request.setAttribute((String) key, errors.get(key));
