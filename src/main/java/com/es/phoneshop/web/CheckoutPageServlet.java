@@ -4,6 +4,7 @@ import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartService;
 import com.es.phoneshop.model.cart.CartServiceImpl;
 import com.es.phoneshop.model.order.*;
+import com.es.phoneshop.model.orderException.Validator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -42,7 +43,7 @@ public class CheckoutPageServlet extends HttpServlet {
         Order order = orderService.createOrder(cart);
         Map<String, String> errors = new HashMap<>();
 
-        errors = orderService.isOrderValid(errors, order, request);
+        errors = Validator.isOrderValid(errors, order, request);
 
         if (errors.get("firstNameError") != null || errors.get("lastNameError") != null ||
                 errors.get("phoneError") != null || errors.get("deliveryAddressError") != null) {

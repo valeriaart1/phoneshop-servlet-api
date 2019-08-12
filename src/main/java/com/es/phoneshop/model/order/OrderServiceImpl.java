@@ -46,15 +46,4 @@ public class OrderServiceImpl implements OrderService {
         OrderDaoImpl.getInstance().save(order);
         return order;
     }
-
-    @Override
-    public Map<String, String> isOrderValid(Map<String, String> errors, Order order, HttpServletRequest request) {
-        errors.put("firstNameError", Validator.validateFirstName(order, request.getParameter("firstName")));
-        errors.put("lastNameError", Validator.validateLastName(order, request.getParameter("lastName")));
-        errors.put("phoneError", Validator.validatePhone(order, request.getParameter("phone")));
-        DeliveryMode.setDeliveryMode(request.getParameter("deliveryMode"), order);
-        errors.put("deliveryAddressError", Validator.validateDeliveryAddress(order, request.getParameter("deliveryAddress")));
-        PaymentMethod.setPaymentMethod(request.getParameter("paymentMethod"), order);
-        return errors;
-    }
 }
