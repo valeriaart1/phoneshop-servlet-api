@@ -19,6 +19,7 @@ public class ProductDaoImplTest {
     private Product productWithId14Stock0;
     private Product productZZZWithId15Price10;
     private Product productAAA2WithId16Price100;
+    private ProductService productService;
 
     @Before
     public void init() throws ProductNotFoundException {
@@ -37,6 +38,7 @@ public class ProductDaoImplTest {
         productDao.save(productWithId14Stock0);
         productDao.save(productZZZWithId15Price10);
         productDao.save(productAAA2WithId16Price100);
+        productService = new ProductService();
     }
 
     @After
@@ -62,76 +64,76 @@ public class ProductDaoImplTest {
     @Test
     public void findProductsStock0() {
         assertFalse("Error of finding product with stock = 0!",
-                productDao.findProducts(null).contains(productWithId14Stock0));
+                productService.findProducts(null).contains(productWithId14Stock0));
     }
 
     @Test
     public void testSizeFindingProducts() {
         assertEquals("Error of size finding product!", 3,
-                productDao.findProducts(null).size());
+                productService.findProducts(null).size());
     }
 
     @Test
     public void findProductsAssertTrue() {
         assertTrue("Error of true finding product!",
-                productDao.findProducts("AAA2").contains(productAAA2WithId16Price100));
+                productService.findProducts("AAA2").contains(productAAA2WithId16Price100));
     }
 
     @Test
     public void findProductsAssertFalse() {
         assertFalse("Error of false finding product!",
-                productDao.findProducts("AAA1").contains(productAAA2WithId16Price100));
+                productService.findProducts("AAA1").contains(productAAA2WithId16Price100));
     }
 
     @Test
     public void findProductsComplexFirstNameTrue() {
         assertTrue("Error of true finding complex first name of product!",
-                productDao.findProducts("AAA2 Lena").contains(productAAA2WithId16Price100));
+                productService.findProducts("AAA2 Lena").contains(productAAA2WithId16Price100));
     }
 
     @Test
     public void findProductsComplexFirstNameFalse() {
         assertFalse("Error of false finding complex first name of product!",
-                productDao.findProducts("AAA2 Lena").contains(productAAA1WithPrice2000));
+                productService.findProducts("AAA2 Lena").contains(productAAA1WithPrice2000));
     }
 
     @Test
     public void findProductsComplexSecondNameTrue() {
         assertTrue("Error of true finding complex second name of product!",
-                productDao.findProducts("Lena AAA1").contains(productAAA1WithPrice2000));
+                productService.findProducts("Lena AAA1").contains(productAAA1WithPrice2000));
     }
 
     @Test
     public void findProductsComplexSecondNameFalse() {
         assertFalse("Error of false finding complex second name of product!",
-                productDao.findProducts("Lena AAA1").contains(productAAA2WithId16Price100));
+                productService.findProducts("Lena AAA1").contains(productAAA2WithId16Price100));
     }
 
     @Test
     public void sortByParameterDescriptionAsc() {
         assertTrue("Error of sorting products by description asc!",
-                productDao.sortByParameter(productDao.findProducts(null), "description", "asc")
+                productService.sortByParameter(productService.findProducts(null), "description", "asc")
                         .get(0).equals(productAAA1WithPrice2000));
     }
 
     @Test
     public void sortByParameterDescriptionDesc() {
         assertTrue("Error of sorting products by description desc!",
-                productDao.sortByParameter(productDao.findProducts(null), "description", "desc")
+                productService.sortByParameter(productService.findProducts(null), "description", "desc")
                         .get(0).equals(productZZZWithId15Price10));
     }
 
     @Test
     public void sortByParameterPriceAsc() {
         assertTrue("Error of sorting products by price asc!",
-                productDao.sortByParameter(productDao.findProducts(null), "price", "asc")
+                productService.sortByParameter(productService.findProducts(null), "price", "asc")
                         .get(0).equals(productZZZWithId15Price10));
     }
 
     @Test
     public void sortByParameterPriceDescQuery() {
         assertTrue("Error of sorting products by price desc!",
-                productDao.sortByParameter(productDao.findProducts(null), "price", "desc")
+                productService.sortByParameter(productService.findProducts(null), "price", "desc")
                         .get(0).equals(productAAA1WithPrice2000));
     }
 
@@ -149,27 +151,27 @@ public class ProductDaoImplTest {
 
     @Test
     public void testSizeSavingProductWithSameId() {
-        int size = productDao.findProducts(null).size();
+        int size = productService.findProducts(null).size();
         Product testProduct = new Product();
         testProduct.setId(16L);
         testProduct.setStock(3);
         testProduct.setPrice(new BigDecimal(200));
         productDao.save(testProduct);
         assertEquals("Error of size saving product with the same id!", size,
-                productDao.findProducts(null).size());
+                productService.findProducts(null).size());
         productDao.delete(testProduct.getId());
     }
 
     @Test
     public void testSizeSavingProduct() {
-        int size = productDao.findProducts(null).size();
+        int size = productService.findProducts(null).size();
         Product testProduct = new Product();
         testProduct.setId(21L);
         testProduct.setStock(3);
         testProduct.setPrice(new BigDecimal(200));
         productDao.save(testProduct);
         assertEquals("Error of size saving product!", size + 1,
-                productDao.findProducts(null).size());
+                productService.findProducts(null).size());
         productDao.delete(testProduct.getId());
     }
 
@@ -180,7 +182,7 @@ public class ProductDaoImplTest {
         testProduct.setStock(3);
         testProduct.setPrice(new BigDecimal(200));
         productDao.save(testProduct);
-        assertTrue("Error of saving product!", productDao.findProducts(null).contains(testProduct));
+        assertTrue("Error of saving product!", productService.findProducts(null).contains(testProduct));
         productDao.delete(testProduct.getId());
     }
 
@@ -188,16 +190,16 @@ public class ProductDaoImplTest {
     public void deleteProduct() {
         productDao.delete(productAAA2WithId16Price100.getId());
         assertFalse("Error of deleting product!",
-                productDao.findProducts(null).contains(productAAA2WithId16Price100));
+                productService.findProducts(null).contains(productAAA2WithId16Price100));
         productDao.save(productAAA2WithId16Price100);
     }
 
     @Test
     public void testSizeTrueDeletingProduct() {
-        int size = productDao.findProducts(null).size();
+        int size = productService.findProducts(null).size();
         productDao.delete(productAAA2WithId16Price100.getId());
         assertEquals("Error of size deleting product!", size - 1,
-                productDao.findProducts(null).size());
+                productService.findProducts(null).size());
         productDao.save(productAAA2WithId16Price100);
     }
 }

@@ -50,7 +50,7 @@ public class ProductDaoImpl implements ProductDao {
                 products.remove(getProduct(product.getId()));
             }
             products.add(product);
-        }
+        } else throw new IllegalArgumentException("Product is null");
     }
 
     @Override
