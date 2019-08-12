@@ -1,6 +1,5 @@
 package com.es.phoneshop.model.cart;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Locale;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.es.phoneshop.model.orderException;
+package com.es.phoneshop.model.validator;
 
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.order.Order;

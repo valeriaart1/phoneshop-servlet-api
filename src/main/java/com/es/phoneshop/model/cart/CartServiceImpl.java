@@ -117,20 +117,20 @@ public class CartServiceImpl implements CartService {
     }
 
     private void recalculateCart(Cart cart) {
-        Optional<BigDecimal> subCost = Optional.ofNullable(cart
+        BigDecimal subCost = cart
                 .getCartItems()
                 .stream()
                 .map(cartItem -> cartItem.getProduct().getPrice().multiply(new BigDecimal(cartItem.getQuantity())))
                 .reduce(BigDecimal::add)
-                .orElse(BigDecimal.ZERO));
-        Optional<Integer> totalQuantity = Optional.ofNullable(cart
+                .orElse(BigDecimal.ZERO);
+        int totalQuantity = cart
                 .getCartItems()
                 .stream()
                 .map(cartItem -> cartItem.getQuantity())
                 .reduce(Integer::sum)
-                .orElse(0));
-        cart.setTotalCost(subCost.get());
-        cart.setTotalQuantity(totalQuantity.get());
+                .orElse(0);
+        cart.setTotalCost(subCost);
+        cart.setTotalQuantity(totalQuantity);
     }
 
     @Override

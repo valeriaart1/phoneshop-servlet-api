@@ -1,6 +1,5 @@
 package com.es.phoneshop.model.product;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
@@ -33,40 +32,12 @@ public class ProductDaoImpl implements ProductDao {
         return product;
     }
 
-    public List<Product> findProducts(String query) {
-        List<Product> productsWithFilter = new ArrayList<>();
-        if (query != null) {
-            String[] words = query.split("\\s");
-            for (String wordForSearching : words) {
-                productsWithFilter.addAll(products
-                        .stream()
-                        .filter(products -> products.getDescription().contains(wordForSearching))
-                        .collect(Collectors.toList()));
-            }
-        } else {
-            productsWithFilter = products;
-        }
-        List<Product> filtered = new ArrayList<>();
-        productsWithFilter
-                .stream()
-                .filter(products -> products.getPrice() != null && products.getStock() > 0)
-                .forEach(products -> filtered.add(products));
-        return filtered;
-    }
+    @Override
+    public List<Product> findProducts() {
+        return products.stream()
+                .filter(product -> (product.getPrice() != null && product.getStock() > 0))
+                .collect(Collectors.toList());
 
-    public List<Product> sortByParameter(List<Product> products, String sort, String order) {
-        if (products == null) return null;
-        List<Product> resultListProducts;
-        if (sort != null && order != null) {
-            String sortOrder = sort + " " + order;
-            resultListProducts = products
-                    .stream()
-                    .sorted(SortBy.getSortOrder(sortOrder))
-                    .collect(Collectors.toList());
-        } else {
-            resultListProducts = products;
-        }
-        return resultListProducts;
     }
 
     @Override

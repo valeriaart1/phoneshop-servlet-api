@@ -37,7 +37,7 @@ public class OrderDaoImpl implements OrderDao {
                 .stream()
                 .filter(products -> products.getSecureId().equals(secureId))
                 .findFirst()
-                .orElseThrow(() -> new OrderNotFoundException("Product with  id: " + secureId + " isn't"));
+                .orElseThrow(() -> new OrderNotFoundException("Order with  id: " + secureId + " isn't"));
         return order;
     }
 }

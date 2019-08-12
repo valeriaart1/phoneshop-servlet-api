@@ -5,11 +5,9 @@ import java.util.List;
 public interface ProductDao {
     Product getProduct(Long id);
 
-    List<Product> findProducts(String query);
+    List<Product> findProducts();
 
     void save(Product product) throws ProductNotFoundException;
 
     void delete(Long id);
-
-    List<Product> sortByParameter(List<Product> products, String sort, String order);
 }
