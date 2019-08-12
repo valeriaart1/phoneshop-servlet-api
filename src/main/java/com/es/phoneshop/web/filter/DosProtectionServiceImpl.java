@@ -10,7 +10,7 @@ public class DosProtectionServiceImpl implements DosProtectionService {
     private static DosProtectionServiceImpl instance;
 
     private Map<String, AtomicLong> countMap;
-    private int MAX_REQUEST_COUNT = 20;
+    private int MAX_REQUEST_COUNT = 200;
     private Date SAVED_DATE;
 
     protected DosProtectionServiceImpl() {
@@ -31,7 +31,7 @@ public class DosProtectionServiceImpl implements DosProtectionService {
 
     @Override
     public boolean isAllowed(String ip) {
-        if (new Date().getSeconds() - SAVED_DATE.getSeconds() > 600000) {
+        if (new Date().getSeconds() - SAVED_DATE.getSeconds() > 60) {
             countMap.clear();
             SAVED_DATE = new Date();
         }

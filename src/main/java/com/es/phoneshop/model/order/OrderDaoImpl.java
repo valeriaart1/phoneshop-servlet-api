@@ -4,11 +4,12 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class OrderDaoImpl implements OrderDao {
     private static OrderDaoImpl instance;
     private List<Order> orders = new CopyOnWriteArrayList<>();
-    private long Id = 0;
+    private AtomicLong Id = new AtomicLong(0);
 
     protected OrderDaoImpl() {
     }
@@ -26,7 +27,7 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public void save(Order order) {
-        order.setId(++Id);
+        order.setId(Id.incrementAndGet());
         orders.add(order);
     }
 
@@ -36,7 +37,7 @@ public class OrderDaoImpl implements OrderDao {
                 .stream()
                 .filter(products -> products.getSecureId().equals(secureId))
                 .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("Product with  id: " + secureId + " isn't"));
+                .orElseThrow(() -> new OrderNotFoundException("Product with  id: " + secureId + " isn't"));
         return order;
     }
 }

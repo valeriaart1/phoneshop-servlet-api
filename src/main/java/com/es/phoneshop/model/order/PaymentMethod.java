@@ -1,9 +1,19 @@
 package com.es.phoneshop.model.order;
 
 public enum PaymentMethod {
-    CREDIT_CARD, CASH;
+    CREDIT_CARD("creditCard"), CASH("cash");
+    private String stringPaymentMethod;
 
-    public static void setPaymentMethod(String stringPaymentMethod, Order order) {
-        order.setPaymentMethod(PaymentMethod.valueOf(stringPaymentMethod));
+    PaymentMethod(String stringPaymentMethod) {
+        this.stringPaymentMethod = stringPaymentMethod;
+    }
+
+    public static PaymentMethod getPaymentMethod(String stringPaymentMethod) {
+        for (PaymentMethod paymentMethod : values()) {
+            if (paymentMethod.stringPaymentMethod.equals(stringPaymentMethod)) {
+                return paymentMethod;
+            }
+        }
+        return null;
     }
 }

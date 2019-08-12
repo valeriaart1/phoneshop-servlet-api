@@ -34,19 +34,11 @@
                     </td>
                 </tr>
             </c:forEach>
-            <tr>
-                <td><b>Delivery Cost</b></td>
-                <td></td>
-                <td></td>
-                <td  align = "right">
-                    <fmt:formatNumber value="${order.deliveryCost}" type="currency" currencySymbol="&#36"/>
-                </td>
-            </tr>
             <tr bgcolor="#7FFFD4">
                 <td><b>Total</b></td>
                 <td></td>
                 <td  align = "right"><b>${cart.totalQuantity}</b></td>
-                <td  align = "right"><b>${order.orderCost}&#36</b></td>
+                <td  align = "right"><b>${cart.totalCost}&#36</b></td>
             </tr>
         </table><br><br>
         <a formaction="${pageContext.servletContext.contextPath}/checkout">
@@ -82,8 +74,8 @@
             <h4>Delivery</h4><hr color="black">
             <label>Delivery mode<br>
                 <select name="deliveryMode">
-                    <option value="COURIER">Courier</option>
-                    <option value="STORE_PICKUP">Store pickup</option>
+                    <option value="courier">Courier</option>
+                    <option value="storePickup">Store pickup</option>
                 </select>
             </label><br>
 
@@ -103,8 +95,8 @@
             <h4>Payment</h4><hr color="black">
             <label>Payment method<br>
                 <select name="paymentMethod">
-                    <option value="CASH">Cash</option>
-                    <option value="CREDIT_CARD">Credit card</option>
+                    <option value="cash">Cash</option>
+                    <option value="creditCard">Credit card</option>
                 </select>
             </label>
             <hr color="black">
@@ -113,7 +105,7 @@
 
         <p align="right">Cost order with delivery: ${order.orderCost}&#36</p>
         <p align="right">For payment: ${order.orderCost}&#36</p>
-        <p align="right">The nearest delivery: ${dayDelivery}</p>
+        <p align="right">The nearest delivery: ${order.deliveryDate}</p>
         <p align="right"><button>Confirm order</button></p>
     </form>
 </tags:master>

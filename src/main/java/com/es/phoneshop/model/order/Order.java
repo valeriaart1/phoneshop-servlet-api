@@ -4,6 +4,7 @@ import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartItem;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ public class Order extends Cart {
     private String lastName;
     private String phone;
     private DeliveryMode deliveryMode;
-    private Date deliveryDate;
+    private LocalDate deliveryDate;
     private BigDecimal deliveryCost;
     private String deliveryAddress;
     private BigDecimal orderCost;
@@ -25,7 +26,7 @@ public class Order extends Cart {
     }
 
     public Order(List<CartItem> cartItems, BigDecimal totalCost, int totalQuantity, String firstName,
-                 String lastName, String phone, DeliveryMode deliveryMode, Date deliveryDate,
+                 String lastName, String phone, DeliveryMode deliveryMode, LocalDate deliveryDate,
                  BigDecimal deliveryCost, String deliveryAddress, BigDecimal orderCost, PaymentMethod paymentMethod) {
         super(cartItems, totalCost, totalQuantity);
         this.firstName = firstName;
@@ -87,11 +88,11 @@ public class Order extends Cart {
         this.deliveryMode = deliveryMode;
     }
 
-    public Date getDeliveryDate() {
+    public LocalDate getDeliveryDate() {
         return deliveryDate;
     }
 
-    public void setDeliveryDate(Date deliveryDate) {
+    public void setDeliveryDate(LocalDate deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
 

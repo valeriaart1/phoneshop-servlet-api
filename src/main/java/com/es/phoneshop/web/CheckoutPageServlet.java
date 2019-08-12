@@ -29,9 +29,6 @@ public class CheckoutPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Cart cart = cartService.getCart(request.getSession());
         Order order = orderService.createOrder(cart);
-        SimpleDateFormat newDateFormat = new SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH);
-        String dayDelivery = newDateFormat.format(order.getDeliveryDate());
-        request.setAttribute("dayDelivery", dayDelivery);
         request.getSession(true).setAttribute("order", order);
         request.getRequestDispatcher("/WEB-INF/pages/checkout.jsp")
                 .forward(request, response);
@@ -43,7 +40,15 @@ public class CheckoutPageServlet extends HttpServlet {
         Order order = orderService.createOrder(cart);
         Map<String, String> errors = new HashMap<>();
 
-        errors = Validator.isOrderValid(errors, order, request);
+        String firstName = request.getParameter("firstName");
+        String lastName = request.getParameter("lastName");
+        String phone = request.getParameter("phone");
+        String deliveryMode = request.getParameter("deliveryMode");
+        String deliveryAddress = request.getParameter("deliveryAddress");
+        String paymentMethod = request.getParameter("paymentMethod");
+
+        errors = Validator.isOrderValid(errors, cart, order, firstName, lastName, phone, deliveryMode, deliveryAddress,
+                paymentMethod);
 
         if (errors.get("firstNameError") != null || errors.get("lastNameError") != null ||
                 errors.get("phoneError") != null || errors.get("deliveryAddressError") != null) {
@@ -57,7 +62,7 @@ public class CheckoutPageServlet extends HttpServlet {
         } else {
             orderService.placeOrder(order);
             response.sendRedirect(request.getContextPath() + "/orderOverview/" + order.getSecureId());
+            cartService.cleanCart(cart);
         }
-        cartService.cleanCart(cart);
     }
 }

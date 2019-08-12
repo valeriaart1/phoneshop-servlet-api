@@ -1,13 +1,16 @@
 package com.es.phoneshop.model.orderException;
 
+import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.order.DeliveryMode;
 import com.es.phoneshop.model.order.Order;
-import com.es.phoneshop.model.order.PaymentMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.es.phoneshop.model.order.DeliveryMode.getDeliveryMode;
+import static com.es.phoneshop.model.order.PaymentMethod.getPaymentMethod;
 
 public class Validator {
     public static String validateFirstName(Order order, String firstName) {
@@ -74,13 +77,17 @@ public class Validator {
         return null;
     }
 
-    public static Map<String, String> isOrderValid(Map<String, String> errors, Order order, HttpServletRequest request) {
-        errors.put("firstNameError", Validator.validateFirstName(order, request.getParameter("firstName")));
-        errors.put("lastNameError", Validator.validateLastName(order, request.getParameter("lastName")));
-        errors.put("phoneError", Validator.validatePhone(order, request.getParameter("phone")));
-        DeliveryMode.setDeliveryMode(request.getParameter("deliveryMode"), order);
-        errors.put("deliveryAddressError", Validator.validateDeliveryAddress(order, request.getParameter("deliveryAddress")));
-        PaymentMethod.setPaymentMethod(request.getParameter("paymentMethod"), order);
+    public static Map<String, String> isOrderValid(Map<String, String> errors, Cart cart, Order order, String firstName,
+                                                   String lastName, String phone, String deliveryMode,
+                                                   String deliveryAddress, String paymentMethod) {
+        errors.put("firstNameError", Validator.validateFirstName(order, firstName));
+        errors.put("lastNameError", Validator.validateLastName(order, lastName));
+        errors.put("phoneError", Validator.validatePhone(order, phone));
+        order.setDeliveryMode(getDeliveryMode(deliveryMode));
+        errors.put("deliveryAddressError", Validator.validateDeliveryAddress(order, deliveryAddress));
+        order.setPaymentMethod(getPaymentMethod(paymentMethod));
+        order.setDeliveryCost(getDeliveryMode(deliveryMode).getDeliveryCost());
+        order.setOrderCost(order.getDeliveryCost().add(cart.getTotalCost()));
         return errors;
     }
 }

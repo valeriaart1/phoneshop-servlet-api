@@ -1,13 +1,10 @@
 package com.es.phoneshop.model.order;
 
 import com.es.phoneshop.model.cart.Cart;
-import com.es.phoneshop.model.orderException.Validator;
 
-import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 import java.util.UUID;
 
 public class OrderServiceImpl implements OrderService {
@@ -34,9 +31,8 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalCost(cart.getTotalCost());
         order.setTotalQuantity(cart.getTotalQuantity());
 
-        order.setDeliveryCost(new BigDecimal(5));
-        order.setDeliveryDate(new Date(new Date().getTime()+24*3600000));
-        order.setOrderCost(order.getDeliveryCost().add(cart.getTotalCost()));
+        System.out.println(LocalDate.now().plusDays(1));
+        order.setDeliveryDate(LocalDate.now().plusDays(1));
         return order;
     }
 
