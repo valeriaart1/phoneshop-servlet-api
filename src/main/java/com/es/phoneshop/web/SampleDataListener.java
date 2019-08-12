@@ -67,7 +67,7 @@ public class SampleDataListener implements ServletContextListener {
     }
 
     private Map<BigDecimal, PriceHistory> history(BigDecimal price) {
-        Map<BigDecimal, PriceHistory> historyMap = new HashMap<>();
+        Map<BigDecimal, PriceHistory> historyMap = new LinkedHashMap<>();
 
         BigDecimal value06 = new BigDecimal("0.6");
         BigDecimal value08 = new BigDecimal("0.8");
@@ -87,10 +87,6 @@ public class SampleDataListener implements ServletContextListener {
         historyMap.put(price3, new PriceHistory(date3, price3, USD));
         historyMap.put(price, new PriceHistory(date4, price, USD));
 
-        return historyMap
-                .entrySet()
-                .stream()
-                .sorted(comparingByKey())
-                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+        return historyMap;
     }
 }
