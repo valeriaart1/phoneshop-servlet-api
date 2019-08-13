@@ -37,10 +37,10 @@ public class CartPageServlet extends HttpServlet {
         Locale locale = request.getLocale();
 
         Map<Long, String> errors = cartService.update(request.getSession(), cart, productIds, quantities, locale);
-        request.setAttribute("errors", errors);
         if (errors.isEmpty()) {
             response.sendRedirect(request.getRequestURI() + MESSAGE_SUCCESS_UPDATING);
         } else {
+            request.setAttribute("errors", errors);
             doGet(request, response);
         }
     }
