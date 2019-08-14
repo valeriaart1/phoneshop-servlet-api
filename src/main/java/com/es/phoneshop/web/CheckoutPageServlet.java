@@ -46,7 +46,7 @@ public class CheckoutPageServlet extends HttpServlet {
         String deliveryAddress = request.getParameter("deliveryAddress");
         String paymentMethod = request.getParameter("paymentMethod");
 
-        errors = Validator.isOrderValid(errors, cart, order, firstName, lastName, phone, deliveryMode, deliveryAddress,
+        errors = Validator.isOrderValid(cart, order, firstName, lastName, phone, deliveryMode, deliveryAddress,
                 paymentMethod);
 
         if (errors.get("firstNameError") != null || errors.get("lastNameError") != null ||

@@ -74,8 +74,8 @@
             <h4>Delivery</h4><hr color="black">
             <label>Delivery mode<br>
                 <select name="deliveryMode">
-                    <option value="courier">Courier</option>
-                    <option value="storePickup">Store pickup</option>
+                    <option value="courier">Courier   [10&#36]</option>
+                    <option value="storePickup">Store pickup   [0&#36]</option>
                 </select>
             </label><br>
 

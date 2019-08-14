@@ -27,6 +27,7 @@
             </c:otherwise>
         </c:choose>
     </form>
+    <c:if test="${not empty viewedProducts}">
     <h5>Recently viewed: </h5><br>
     <table border="1">
         <tr>
@@ -41,4 +42,5 @@
             </c:forEach>
         </tr>
     </table>
+    </c:if>
 </tags:master>
