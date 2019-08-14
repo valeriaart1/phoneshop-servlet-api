@@ -2,9 +2,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <minicart>
-    <a href="${pageContext.servletContext.contextPath}/cart" >
-        <c:if test="${cart.totalQuantity != 0}">
+    <c:if test="${cart.totalQuantity != 0}">
+        <a href="${pageContext.servletContext.contextPath}/cart" >
             ${cart.totalCost} for ${cart.totalQuantity}
-        </c:if>
-    </a>
+        </a>
+    </c:if>
 </minicart>
