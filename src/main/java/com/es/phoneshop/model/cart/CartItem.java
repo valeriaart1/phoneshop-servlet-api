@@ -9,7 +9,7 @@ public class CartItem implements Serializable {
     private int quantity;
 
     public CartItem(Product product, int quantity) {
-        if(product.getId() == null) {
+        if (product.getId() == null) {
             throw new IllegalArgumentException("product is required");
         }
         this.product = product;
@@ -19,6 +19,7 @@ public class CartItem implements Serializable {
     public Product getProduct() {
         return product;
     }
+
     public void setProduct(Product product) {
         this.product = product;
     }

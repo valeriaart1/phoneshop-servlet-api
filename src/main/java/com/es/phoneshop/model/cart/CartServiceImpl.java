@@ -20,9 +20,9 @@ public class CartServiceImpl implements CartService {
     }
 
     public static CartServiceImpl getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             synchronized (CartServiceImpl.class) {
-                if(instance == null) {
+                if (instance == null) {
                     instance = new CartServiceImpl();
                 }
             }
@@ -31,20 +31,20 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Cart getCart(HttpServletRequest request) {
-        Cart result = (Cart) request.getSession().getAttribute(CART_SESSION_ATTRIBUTE);
-        if(result == null) {
+    public Cart getCart(HttpSession session) {
+        Cart result = (Cart) session.getAttribute(CART_SESSION_ATTRIBUTE);
+        if (result == null) {
             result = new Cart();
-            request.getSession().setAttribute(CART_SESSION_ATTRIBUTE, result);
+            session.setAttribute(CART_SESSION_ATTRIBUTE, result);
         }
         return result;
     }
 
     @Override
     public String add(HttpSession session, Cart cart, Long productId, String quantity, Locale locale) {
-        Product product = (Product) productDao.getProduct(productId);
+        Product product = productDao.getProduct(productId);
         String errorOfQuantity = quantityHasError(locale, quantity, product.getStock());
-        if(errorOfQuantity == null) {
+        if (errorOfQuantity == null) {
             int quantityInt = Integer.parseInt(quantity);
             Optional<CartItem> optionalCartItem = cart
                     .getCartItems()
@@ -58,9 +58,9 @@ public class CartServiceImpl implements CartService {
                 cart.getCartItems().add(new CartItem(product, quantityInt));
             }
             recalculateCart(cart);
+            //product.setStock(product.getStock() - quantityInt);
             return null;
-        }
-        else {
+        } else {
             return errorOfQuantity;
         }
     }
@@ -69,19 +69,19 @@ public class CartServiceImpl implements CartService {
     public Map<Long, String> update(HttpSession session, Cart cart, String[] productIds, String[] quantities, Locale locale) {
         Map<Long, String> errors = new HashMap();
 
-        for(int i = 0; i < productIds.length; i++) {
-            Product product = (Product) productDao.getProduct(Long.valueOf(productIds[i]));
+        for (int i = 0; i < productIds.length; i++) {
+            Product product = productDao.getProduct(Long.valueOf(productIds[i]));
             String errorOfQuantity = quantityHasError(locale, quantities[i], product.getStock());
-            if(errorOfQuantity == null) {
+            if (errorOfQuantity == null) {
                 int quantityInt = Integer.parseInt(quantities[i]);
                 cart.getCartItems()
                         .stream()
                         .filter(cartItem -> cartItem.getProduct().getId().equals(product.getId()))
                         .findAny()
                         .ifPresent(cartItem -> cartItem.setQuantity(quantityInt));
+               // product.setStock(product.getStock() - quantityInt);
                 recalculateCart(cart);
-            }
-            else {
+            } else {
                 errors.put(Long.valueOf(productIds[i]), errorOfQuantity);
             }
         }
@@ -97,8 +97,7 @@ public class CartServiceImpl implements CartService {
             if (quantityInt > stock) {
                 return "Error of stock! Max stock = " + stock;
             }
-        }
-        catch(ParseException exception) {
+        } catch (ParseException exception) {
             return "Not a number";
         }
         return null;
@@ -106,20 +105,37 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void delete(Cart cart, Long productId) {
+        int quantity = cart.getCartItems()
+                .stream()
+                .filter(cartItem -> cartItem.getProduct().getId().equals(productId))
+                .findAny()
+                .get()
+                .getQuantity();
         cart.getCartItems().removeIf(cartItem -> cartItem.getProduct().getId().equals(productId));
+       // productDao.getProduct(productId).setStock(productDao.getProduct(productId).getStock() + quantity);
         recalculateCart(cart);
     }
 
     private void recalculateCart(Cart cart) {
-        Optional<BigDecimal> totalCost = cart.getCartItems()
+        BigDecimal subCost = cart
+                .getCartItems()
                 .stream()
-                .map(cartItem -> cartItem.getProduct().getPrice().multiply(new BigDecimal(cart.getTotalQuantity())))
-                .reduce(BigDecimal::add);
-        Optional<Integer> totalQuantity = cart.getCartItems()
+                .map(cartItem -> cartItem.getProduct().getPrice().multiply(new BigDecimal(cartItem.getQuantity())))
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.ZERO);
+        int totalQuantity = cart
+                .getCartItems()
                 .stream()
-                .map(CartItem::getQuantity)
-                .reduce(Integer::compareTo);
-        cart.setTotalCost(totalCost.get());
-        cart.setTotalQuantity(totalQuantity.get());
+                .map(cartItem -> cartItem.getQuantity())
+                .reduce(Integer::sum)
+                .orElse(0);
+        cart.setTotalCost(subCost);
+        cart.setTotalQuantity(totalQuantity);
+    }
+
+    @Override
+    public void cleanCart(Cart cart) {
+        cart.getCartItems().clear();
+        recalculateCart(cart);
     }
 }

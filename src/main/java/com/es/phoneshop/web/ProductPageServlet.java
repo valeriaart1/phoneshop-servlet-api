@@ -37,10 +37,10 @@ public class ProductPageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long productId = Long.valueOf(loadProduct(request));
-        try{
-            Product product = (Product) productDao.getProduct(productId);
+        try {
+            Product product = productDao.getProduct(productId);
             Deque<Product> dequeViewedProducts = viewedProducts.getViewedProducts(request.getSession());
-            Cart cart = cartService.getCart(request);
+            Cart cart = cartService.getCart(request.getSession());
 
             request.setAttribute("cart", cart);
             request.setAttribute("viewedProducts", dequeViewedProducts);
@@ -48,21 +48,20 @@ public class ProductPageServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/pages/product.jsp")
                     .forward(request, response);
             viewedProducts.addViewedProducts(viewedProducts.getViewedProducts(request.getSession()), product);
-        }
-        catch(ProductNotFoundException exception) {
+        } catch (ProductNotFoundException exception) {
             response.sendError(404);
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-        Cart cart = cartService.getCart(request);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Cart cart = cartService.getCart(request.getSession());
         Long productId = Long.valueOf(loadProduct(request));
         String quantity = request.getParameter("quantity");
         Locale locale = request.getLocale();
 
         String QUANTITY_ERROR = cartService.add(request.getSession(), cart, productId, quantity, locale);
-        if(QUANTITY_ERROR == null){
+        if (QUANTITY_ERROR == null) {
             response.sendRedirect(request.getContextPath() + request.getServletPath() +
                     request.getPathInfo() + MESSAGE_SUCCESS_ADDING);
             return;
@@ -73,7 +72,7 @@ public class ProductPageServlet extends HttpServlet {
         doGet(request, response);
     }
 
-    private String loadProduct(HttpServletRequest request) throws NoSuchElementException{
-        return  request.getPathInfo().substring(1);
+    private String loadProduct(HttpServletRequest request) throws NoSuchElementException {
+        return request.getPathInfo().substring(1);
     }
 }

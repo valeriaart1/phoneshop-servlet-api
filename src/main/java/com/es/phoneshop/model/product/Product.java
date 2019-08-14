@@ -1,17 +1,22 @@
 package com.es.phoneshop.model.product;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.Map;
 import java.util.Objects;
 
-public class Product {
+public class Product implements Serializable {
     private Long id;
     private String code;
     private String description;
-    /** null means there is no price because the product is outdated or new */
+    /**
+     * null means there is no price because the product is outdated or new
+     */
     private BigDecimal price;
-    /** can be null if the price is null */
+    /**
+     * can be null if the price is null
+     */
     private Currency currency;
     private int stock;
     private String imageUrl;
@@ -49,7 +54,7 @@ public class Product {
     public String toString() {
         return "Product{" +
                 "id=" + id +
-                ", code="  + code + '\'' +
+                ", code=" + code + '\'' +
                 ", description=" + description + '\'' +
                 ", price=" + price +
                 ", currency=" + currency +
@@ -62,6 +67,7 @@ public class Product {
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -69,6 +75,7 @@ public class Product {
     public String getCode() {
         return code;
     }
+
     public void setCode(String code) {
         this.code = code;
     }
@@ -76,6 +83,7 @@ public class Product {
     public String getDescription() {
         return description;
     }
+
     public void setDescription(String description) {
         this.description = description;
     }
@@ -83,6 +91,7 @@ public class Product {
     public BigDecimal getPrice() {
         return price;
     }
+
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
@@ -90,6 +99,7 @@ public class Product {
     public Currency getCurrency() {
         return currency;
     }
+
     public void setCurrency(Currency currency) {
         this.currency = currency;
     }
@@ -97,6 +107,7 @@ public class Product {
     public int getStock() {
         return stock;
     }
+
     public void setStock(int stock) {
         this.stock = stock;
     }
@@ -104,6 +115,7 @@ public class Product {
     public String getImageUrl() {
         return imageUrl;
     }
+
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
@@ -111,6 +123,7 @@ public class Product {
     public Map<BigDecimal, PriceHistory> getHistory() {
         return history;
     }
+
     public void setHistory(Map<BigDecimal, PriceHistory> history) {
         this.history = history;
     }

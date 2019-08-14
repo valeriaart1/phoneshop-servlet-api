@@ -11,6 +11,16 @@
   <listener>
     <listener-class>com.es.phoneshop.web.SampleDataListener</listener-class>
   </listener>
+
+  <filter>
+    <filter-name>dos</filter-name>
+    <filter-class>com.es.phoneshop.web.filter.DosFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>dos</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
   <servlet>
     <servlet-name>productList</servlet-name>
     <servlet-class>com.es.phoneshop.web.ProductListPageServlet</servlet-class>
@@ -55,6 +65,25 @@
     <servlet-name>minicart</servlet-name>
     <url-pattern>/minicart</url-pattern>
   </servlet-mapping>
+
+  <servlet>
+    <servlet-name>order</servlet-name>
+    <servlet-class> com.es.phoneshop.web.CheckoutPageServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>order</servlet-name>
+    <url-pattern>/checkout</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>orderOverview</servlet-name>
+    <servlet-class>com.es.phoneshop.web.OrderOverviewPageServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>orderOverview</servlet-name>
+    <url-pattern>/orderOverview/*</url-pattern>
+  </servlet-mapping>
+
 
   <error-page>
     <error-code>404</error-code>

@@ -1,6 +1,6 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.model.product.ProductDaoImpl;
+import com.es.phoneshop.model.product.ProductService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -9,8 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class ProductListPageServlet extends HttpServlet {
-
-    private ProductDaoImpl productDao = ProductDaoImpl.getInstance();
+    private ProductService productService = new ProductService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -18,7 +17,7 @@ public class ProductListPageServlet extends HttpServlet {
         String sort = request.getParameter("sort");
         String order = request.getParameter("order");
 
-        request.setAttribute("products", productDao.sortByParameter(productDao.findProducts(query), sort, order));
+        request.setAttribute("products", productService.sortByParameter(productService.findProducts(query), sort, order));
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
 }

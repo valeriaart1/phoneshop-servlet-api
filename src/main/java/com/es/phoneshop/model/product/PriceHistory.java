@@ -36,6 +36,7 @@ public class PriceHistory implements Serializable {
     public LocalDate getDate() {
         return date;
     }
+
     public void setDate(LocalDate date) {
         this.date = date;
     }
@@ -43,6 +44,7 @@ public class PriceHistory implements Serializable {
     public BigDecimal getPrice() {
         return price;
     }
+
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
@@ -50,6 +52,7 @@ public class PriceHistory implements Serializable {
     public Currency getCurrency() {
         return currency;
     }
+
     public void setCurrency(Currency currency) {
         this.currency = currency;
     }

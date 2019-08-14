@@ -11,14 +11,14 @@ import java.util.*;
 import static java.util.Map.Entry.comparingByKey;
 import static java.util.stream.Collectors.toMap;
 
-public class SampleDataListener implements ServletContextListener{
+public class SampleDataListener implements ServletContextListener {
 
     private static final Currency USD = Currency.getInstance("USD");
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         String insertSampleData = servletContextEvent.getServletContext().getInitParameter("insertSampleData");
-        if("true".equals(insertSampleData)) {
+        if ("true".equals(insertSampleData)) {
             ProductDao productDao = ProductDaoImpl.getInstance();
             getSampleProducts().forEach(product -> {
                 try {
@@ -67,7 +67,7 @@ public class SampleDataListener implements ServletContextListener{
     }
 
     private Map<BigDecimal, PriceHistory> history(BigDecimal price) {
-        Map<BigDecimal, PriceHistory> historyMap = new HashMap<>();
+        Map<BigDecimal, PriceHistory> historyMap = new LinkedHashMap<>();
 
         BigDecimal value06 = new BigDecimal("0.6");
         BigDecimal value08 = new BigDecimal("0.8");
@@ -78,19 +78,15 @@ public class SampleDataListener implements ServletContextListener{
         BigDecimal price3 = price.multiply(value09);
 
         LocalDate date1 = LocalDate.of(2018, 9, 6);
-        LocalDate date2 = LocalDate.of(2019, 1,9);
+        LocalDate date2 = LocalDate.of(2019, 1, 9);
         LocalDate date3 = LocalDate.of(2019, 3, 22);
-        LocalDate date4 = LocalDate.of(2019, 6,30);
+        LocalDate date4 = LocalDate.of(2019, 6, 30);
 
         historyMap.put(price1, new PriceHistory(date1, price1, USD));
         historyMap.put(price2, new PriceHistory(date2, price2, USD));
         historyMap.put(price3, new PriceHistory(date3, price3, USD));
         historyMap.put(price, new PriceHistory(date4, price, USD));
 
-        return historyMap
-                .entrySet()
-                .stream()
-                .sorted(comparingByKey())
-                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+        return historyMap;
     }
 }
