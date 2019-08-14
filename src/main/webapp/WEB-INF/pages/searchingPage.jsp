@@ -16,12 +16,12 @@
                             <tr>
                                 <td>Image</td>
                                 <td>Description
-                                    <tags:sort query="${param.query}" sort="description" order="asc" url="https://img2.pngindir.com/20180518/lal/kisspng-angle-font-5aff94376a8d73.2354539915266990634365.jpg"></tags:sort>
-                                    <tags:sort query="${param.query}" sort="description" order="desc" url="https://image.flaticon.com/icons/png/512/16/16748.png"></tags:sort>
+                                    <tags:sortSearchingProducts sort="description" order="asc" url="https://img2.pngindir.com/20180518/lal/kisspng-angle-font-5aff94376a8d73.2354539915266990634365.jpg"></tags:sortSearchingProducts>
+                                    <tags:sortSearchingProducts sort="description" order="desc" url="https://image.flaticon.com/icons/png/512/16/16748.png"></tags:sortSearchingProducts>
                                 </td>
                                 <td class="price">Price
-                                    <tags:sort query="${param.query}" sort="price" order="asc" url="https://img2.pngindir.com/20180518/lal/kisspng-angle-font-5aff94376a8d73.2354539915266990634365.jpg"></tags:sort>
-                                    <tags:sort query="${param.query}" sort="price" order="desc" url="https://image.flaticon.com/icons/png/512/16/16748.png"></tags:sort>
+                                    <tags:sortSearchingProducts sort="price" order="asc" url="https://img2.pngindir.com/20180518/lal/kisspng-angle-font-5aff94376a8d73.2354539915266990634365.jpg"></tags:sortSearchingProducts>
+                                    <tags:sortSearchingProducts sort="price" order="desc" url="https://image.flaticon.com/icons/png/512/16/16748.png"></tags:sortSearchingProducts>
                                 </td>
                             </tr>
                         </thead>

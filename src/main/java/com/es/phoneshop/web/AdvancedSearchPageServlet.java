@@ -22,7 +22,11 @@ public class AdvancedSearchPageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("products", productService.findProducts(null));
+        String sort = request.getParameter("sort");
+        String order = request.getParameter("order");
+
+        request.setAttribute("products", productService
+                .sortByParameter(productService.findProducts(null), sort, order));
         request.getRequestDispatcher("/WEB-INF/pages/searchingPage.jsp").forward(request, response);
     }
 
@@ -44,8 +48,8 @@ public class AdvancedSearchPageServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/pages/searchingPage.jsp")
                     .forward(request, response);
         } else {
-            request.setAttribute("products",
-                    productService.findProductsAdvancedSearch(description, minPrice, maxPrice, minStock, maxStock));
+            request.setAttribute("products", productService.findProductsAdvancedSearch(description,
+                    minPrice, maxPrice, minStock, maxStock));
             request.getRequestDispatcher("/WEB-INF/pages/searchingPage.jsp").forward(request, response);
         }
     }
