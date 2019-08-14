@@ -4,7 +4,7 @@
 <minicart>
     <a href="${pageContext.servletContext.contextPath}/cart" >
         <c:if test="${cart.totalQuantity != 0}">
-            ${cart.totalCost} for ${cart.totalQuantity}</a>
+            ${cart.totalCost} for ${cart.totalQuantity}
         </c:if>
     </a>
 </minicart>
