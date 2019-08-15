@@ -3,6 +3,7 @@ package com.es.phoneshop.model.validator;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.order.Order;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -68,6 +69,43 @@ public class Validator {
         order.setPaymentMethod(getPaymentMethod(paymentMethod));
         order.setDeliveryCost(getDeliveryMode(deliveryMode).getDeliveryCost());
         order.setOrderCost(order.getDeliveryCost().add(cart.getTotalCost()));
+        return errors;
+    }
+
+    public static Map<String, String> validateSearchingFields(String minPrice, String maxPrice,
+                                                              String minStock, String maxStock) {
+        Map<String, String> errors = new HashMap<>();
+        String NOT_NUMBER = "Not a number";
+        Pattern pattern = Pattern.compile("[0-9]*");
+        Matcher matcherMinPrice = pattern.matcher(minPrice);
+        Matcher matcherMaxPrice = pattern.matcher(maxPrice);
+        Matcher matcherMinStock = pattern.matcher(minStock);
+        Matcher matcherMaxStock = pattern.matcher(maxStock);
+
+        if (!minPrice.isEmpty() && !matcherMinPrice.matches()) {
+            errors.put("minPriceError", NOT_NUMBER);
+        }
+        if (!maxPrice.isEmpty() && !matcherMaxPrice.matches()) {
+            errors.put("maxPriceError", NOT_NUMBER);
+        }
+        if (!minStock.isEmpty() && !matcherMinStock.matches()) {
+            errors.put("minStockError", NOT_NUMBER);
+        }
+        if (!maxStock.isEmpty() && !matcherMaxStock.matches()) {
+            errors.put("maxStockError", NOT_NUMBER);
+        }
+
+        if (!minPrice.isEmpty() && !maxPrice.isEmpty() && errors.values().isEmpty()) {
+            if (new BigDecimal(minPrice).compareTo(new BigDecimal(maxPrice)) >= 0) {
+                errors.put("maxPriceError", "Max price must be more than min price!");
+            }
+        }
+        if (!minStock.isEmpty() && !maxStock.isEmpty() && errors.values().isEmpty()) {
+            if (Integer.parseInt(minStock) >= Integer.parseInt(maxStock)) {
+                errors.put("maxStockError", "Max stock must be more than min stock!");
+            }
+        }
+
         return errors;
     }
 }

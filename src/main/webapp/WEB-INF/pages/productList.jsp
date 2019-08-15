@@ -4,9 +4,14 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <jsp:useBean id="products" type="java.util.ArrayList" scope="request"/>
-<tags:master pageTitle="Product List" pageClass="product-list"><br>
+<tags:master pageTitle="Product List" pageClass="product-list">
+    <a href="${pageContext.servletContext.contextPath}/searchingPage">
+        <b>
+            Advanced searching
+        </b>
+    </a><br>
     <form>
-        <pre> <input name="query" value="${param.query}"> <button>Search</button></pre>
+        <pre> <br><input name="query" value="${param.query}"> <button>Search</button></pre>
     </form>
     <table>
         <thead>

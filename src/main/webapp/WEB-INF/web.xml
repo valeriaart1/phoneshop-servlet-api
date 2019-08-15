@@ -84,6 +84,14 @@
     <url-pattern>/orderOverview/*</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>advancedSearchPage</servlet-name>
+    <servlet-class>com.es.phoneshop.web.AdvancedSearchPageServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>advancedSearchPage</servlet-name>
+    <url-pattern>/searchingPage</url-pattern>
+  </servlet-mapping>
 
   <error-page>
     <error-code>404</error-code>
