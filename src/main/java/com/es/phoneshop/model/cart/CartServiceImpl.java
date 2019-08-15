@@ -58,7 +58,7 @@ public class CartServiceImpl implements CartService {
                 cart.getCartItems().add(new CartItem(product, quantityInt));
             }
             recalculateCart(cart);
-            //product.setStock(product.getStock() - quantityInt);
+            product.setStock(product.getStock() - quantityInt);
             return null;
         } else {
             return errorOfQuantity;
@@ -79,7 +79,7 @@ public class CartServiceImpl implements CartService {
                         .filter(cartItem -> cartItem.getProduct().getId().equals(product.getId()))
                         .findAny()
                         .ifPresent(cartItem -> cartItem.setQuantity(quantityInt));
-               // product.setStock(product.getStock() - quantityInt);
+                product.setStock(product.getStock() - quantityInt);
                 recalculateCart(cart);
             } else {
                 errors.put(Long.valueOf(productIds[i]), errorOfQuantity);
@@ -112,7 +112,7 @@ public class CartServiceImpl implements CartService {
                 .get()
                 .getQuantity();
         cart.getCartItems().removeIf(cartItem -> cartItem.getProduct().getId().equals(productId));
-       // productDao.getProduct(productId).setStock(productDao.getProduct(productId).getStock() + quantity);
+        productDao.getProduct(productId).setStock(productDao.getProduct(productId).getStock() + quantity);
         recalculateCart(cart);
     }
 

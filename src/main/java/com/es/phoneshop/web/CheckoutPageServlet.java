@@ -37,7 +37,7 @@ public class CheckoutPageServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         Cart cart = cartService.getCart(request.getSession());
         Order order = orderService.createOrder(cart);
-        Map<String, String> errors = new HashMap<>();
+        Map<String, String> errors;
 
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");

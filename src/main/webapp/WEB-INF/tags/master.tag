@@ -20,12 +20,12 @@ integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw
       <img src="${pageContext.servletContext.contextPath}/images/logo.svg"/>
       PhoneShop
     </a>
-    <jsp:include page="/WEB-INF/pages/minicart.jsp"/>
     <a href="${pageContext.servletContext.contextPath}/cart">
       <img hspace="40" vspace="15" align="right" src="https://cdn.onlinewebfonts.com/svg/img_121831.png"/>
     </a>
   </p>
   </header>
+  <jsp:include page="/WEB-INF/pages/minicart.jsp"/>
   <body class=${pageClass}>
   <main>
     <jsp:doBody/>
